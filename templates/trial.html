@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing Button Example</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Processing Button Example</h1>
+        
+        <!-- The main button -->
+        <button 
+            id="processButton" 
+            class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center"
+        >
+            <span id="buttonText">Start Processing</span>
+            <!-- Spinner (hidden by default) -->
+            <div class="flex items-center justify-center h-16">
+                <svg class=" h-8 w-8 text-success" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.372 0 0 5.372 0 12h4z"></path>
+                </svg>
+              </div>
+              
+        </button>
+        
+        <!-- Progress bar (hidden by default) -->
+        <div id="progressContainer" class="hidden mt-4">
+            <div class="text-sm text-gray-600 mb-2">Processing...</div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div id="progressBar" class="bg-blue-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </div>
+        
+        <!-- Status message -->
+        <div id="statusMessage" class="mt-4 text-center text-gray-600"></div>
+    </div>
+
+    <script>
+        // Get references to our elements
+        const button = document.getElementById('processButton');
+        const buttonText = document.getElementById('buttonText');
+        const spinner = document.getElementById('spinner');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const statusMessage = document.getElementById('statusMessage');
+        
+        // Add click event listener to the button
+        button.addEventListener('click', function() {
+            // Start the processing animation
+            startProcessing();
+        });
+        
+        function startProcessing() {
+            // Step 1: Change button state to "processing"
+            button.disabled = true; // Disable button so it can't be clicked again
+            button.classList.remove('hover:bg-blue-600');
+            button.classList.add('bg-blue-400', 'cursor-not-allowed');
+            
+            // Step 2: Change text and show spinner
+            buttonText.textContent = 'Processing...';
+            spinner.classList.remove('hidden');
+            
+            // Step 3: Show progress bar
+            progressContainer.classList.remove('hidden');
+            
+            // Step 4: Simulate processing with progress updates
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 15; // Random progress increment
+                
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(progressInterval);
+                    // When done, call the completion function
+                    setTimeout(completeProcessing, 500);
+                }
+                
+                // Update progress bar width
+                progressBar.style.width = progress + '%';
+                
+                // Update status message based on progress
+                if (progress < 30) {
+                    statusMessage.textContent = 'Initializing...';
+                } else if (progress < 70) {
+                    statusMessage.textContent = 'Processing data...';
+                } else if (progress < 100) {
+                    statusMessage.textContent = 'Finalizing...';
+                }
+            }, 200); // Update every 200ms
+        }
+        
+        function completeProcessing() {
+            // Step 5: Show completion state
+            buttonText.textContent = 'Complete!';
+            spinner.classList.add('hidden');
+            statusMessage.textContent = 'Processing completed successfully!';
+            statusMessage.classList.add('text-green-600');
+            
+            // Step 6: Reset everything after 2
+             seconds
+            setTimeout(resetButton, 2000);
+        }
+        
+        function resetButton() {
+            // Reset button to original state
+            button.disabled = false;
+            button.classList.remove('bg-blue-400', 'cursor-not-allowed');
+            button.classList.add('hover:bg-blue-600');
+            
+            // Reset text and hide elements
+            buttonText.textContent = 'Start Processing';
+            progressContainer.classList.add('hidden');
+            progressBar.style.width = '0%';
+            statusMessage.textContent = '';
+            statusMessage.classList.remove('text-green-600');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,642 @@
+{
+  "room_1": {
+    "room_class": "Room",
+    "room_type": "bathroom",
+    "room_bbox": [
+      651,
+      102,
+      1175,
+      402
+    ],
+    "contained_symbols": [
+      {
+        "symbol_class": "bathroom_sink",
+        "bbox": [
+          667,
+          103,
+          787,
+          198
+        ],
+        "center": [
+          727,
+          150
+        ]
+      },
+      {
+        "symbol_class": "toilet",
+        "bbox": [
+          909,
+          98,
+          1031,
+          246
+        ],
+        "center": [
+          970,
+          172
+        ]
+      }
+    ],
+    "doors": []
+  },
+  "room_2": {
+    "room_class": "Room",
+    "room_type": "unknown",
+    "room_bbox": [
+      135,
+      623,
+      270,
+      944
+    ],
+    "contained_symbols": [],
+    "doors": []
+  },
+  "room_3": {
+    "room_class": "Room",
+    "room_type": "garage",
+    "room_bbox": [
+      129,
+      835,
+      1182,
+      1286
+    ],
+    "contained_symbols": [
+      {
+        "symbol_class": "sofa",
+        "bbox": [
+          413,
+          879,
+          749,
+          945
+        ],
+        "center": [
+          581,
+          912
+        ]
+      },
+      {
+        "symbol_class": "car",
+        "bbox": [
+          303,
+          1061,
+          549,
+          1168
+        ],
+        "center": [
+          426,
+          1114
+        ]
+      },
+      {
+        "symbol_class": "table",
+        "bbox": [
+          756,
+          889,
+          818,
+          943
+        ],
+        "center": [
+          787,
+          916
+        ]
+      }
+    ],
+    "doors": []
+  },
+  "room_4": {
+    "room_class": "Room",
+    "room_type": "unknown",
+    "room_bbox": [
+      838,
+      643,
+      1179,
+      945
+    ],
+    "contained_symbols": [
+      {
+        "symbol_class": "door",
+        "bbox": [
+          1081,
+          762,
+          1169,
+          869
+        ],
+        "center": [
+          1125,
+          815
+        ]
+      }
+    ],
+    "doors": [
+      {
+        "symbol_class": "door",
+        "bbox": [
+          1081,
+          762,
+          1169,
+          869
+        ],
+        "center": [
+          1125,
+          815
+        ]
+      }
+    ]
+  },
+  "room_5": {
+    "room_class": "Room",
+    "room_type": "kitchen",
+    "room_bbox": [
+      1195,
+      786,
+      1621,
+      1266
+    ],
+    "contained_symbols": [
+      {
+        "symbol_class": "hob",
+        "bbox": [
+          1310,
+          823,
+          1452,
+          982
+        ],
+        "center": [
+          1381,
+          902
+        ]
+      },
+      {
+        "symbol_class": "door",
+        "bbox": [
+          1187,
+          980,
+          1304,
+          1081
+        ],
+        "center": [
+          1245,
+          1030
+        ]
+      },
+      {
+        "symbol_class": "kitchen_sink",
+        "bbox": [
+          1474,
+          1054,
+          1584,
+          1249
+        ],
+        "center": [
+          1529,
+          1151
+        ]
+      }
+    ],
+    "doors": [
+      {
+        "symbol_class": "door",
+        "bbox": [
+          1187,
+          980,
+          1304,
+          1081
+        ],
+        "center": [
+          1245,
+          1030
+        ]
+      }
+    ]
+  },
+  "room_6": {
+    "room_class": "Room",
+    "room_type": "bedroom",
+    "room_bbox": [
+      843,
+      404,
+      1631,
+      789
+    ],
+    "contained_symbols": [
+      {
+        "symbol_class": "door",
+        "bbox": [
+          1416,
+          723,
+          1475,
+          784
+        ],
+        "center": [
+          1445,
+          753
+        ]
+      },
+      {
+        "symbol_class": "door",
+        "bbox": [
+          1562,
+          496,
+          1629,
+          552
+        ],
+        "center": [
+          1595,
+          524
+        ]
+      },
+      {
+        "symbol_class": "bed",
+        "bbox": [
+          1329,
+          490,
+          1461,
+          635
+        ],
+        "center": [
+          1395,
+          562
+        ]
+      },
+      {
+        "symbol_class": "bed",
+        "bbox": [
+          954,
+          436,
+          1088,
+          597
+        ],
+        "center": [
+          1021,
+          516
+        ]
+      }
+    ],
+    "doors": [
+      {
+        "symbol_class": "door",
+        "bbox": [
+          1416,
+          723,
+          1475,
+          784
+        ],
+        "center": [
+          1445,
+          753
+        ]
+      },
+      {
+        "symbol_class": "door",
+        "bbox": [
+          1562,
+          496,
+          1629,
+          552
+        ],
+        "center": [
+          1595,
+          524
+        ]
+      }
+    ]
+  },
+  "room_7": {
+    "room_class": "Room",
+    "room_type": "bathroom",
+    "room_bbox": [
+      107,
+      96,
+      836,
+      936
+    ],
+    "contained_symbols": [
+      {
+        "symbol_class": "sofa",
+        "bbox": [
+          300,
+          656,
+          400,
+          942
+        ],
+        "center": [
+          350,
+          799
+        ]
+      },
+      {
+        "symbol_class": "stairs",
+        "bbox": [
+          785,
+          406,
+          846,
+          563
+        ],
+        "center": [
+          815,
+          484
+        ]
+      },
+      {
+        "symbol_class": "sofa",
+        "bbox": [
+          413,
+          879,
+          749,
+          945
+        ],
+        "center": [
+          581,
+          912
+        ]
+      },
+      {
+        "symbol_class": "door",
+        "bbox": [
+          103,
+          449,
+          223,
+          566
+        ],
+        "center": [
+          163,
+          507
+        ]
+      },
+      {
+        "symbol_class": "dining_table",
+        "bbox": [
+          127,
+          195,
+          532,
+          395
+        ],
+        "center": [
+          329,
+          295
+        ]
+      },
+      {
+        "symbol_class": "bathroom_sink",
+        "bbox": [
+          667,
+          103,
+          787,
+          198
+        ],
+        "center": [
+          727,
+          150
+        ]
+      },
+      {
+        "symbol_class": "door",
+        "bbox": [
+          509,
+          419,
+          654,
+          576
+        ],
+        "center": [
+          581,
+          497
+        ]
+      },
+      {
+        "symbol_class": "table",
+        "bbox": [
+          756,
+          889,
+          818,
+          943
+        ],
+        "center": [
+          787,
+          916
+        ]
+      }
+    ],
+    "doors": [
+      {
+        "symbol_class": "door",
+        "bbox": [
+          103,
+          449,
+          223,
+          566
+        ],
+        "center": [
+          163,
+          507
+        ]
+      },
+      {
+        "symbol_class": "door",
+        "bbox": [
+          509,
+          419,
+          654,
+          576
+        ],
+        "center": [
+          581,
+          497
+        ]
+      }
+    ]
+  },
+  "room_8": {
+    "room_class": "Room",
+    "room_type": "living_room",
+    "room_bbox": [
+      294,
+      580,
+      827,
+      938
+    ],
+    "contained_symbols": [
+      {
+        "symbol_class": "sofa",
+        "bbox": [
+          300,
+          656,
+          400,
+          942
+        ],
+        "center": [
+          350,
+          799
+        ]
+      },
+      {
+        "symbol_class": "sofa",
+        "bbox": [
+          413,
+          879,
+          749,
+          945
+        ],
+        "center": [
+          581,
+          912
+        ]
+      },
+      {
+        "symbol_class": "table",
+        "bbox": [
+          756,
+          889,
+          818,
+          943
+        ],
+        "center": [
+          787,
+          916
+        ]
+      }
+    ],
+    "doors": []
+  },
+  "room_9": {
+    "room_class": "Room",
+    "room_type": "dining_room--reception",
+    "room_bbox": [
+      115,
+      115,
+      648,
+      628
+    ],
+    "contained_symbols": [
+      {
+        "symbol_class": "door",
+        "bbox": [
+          103,
+          449,
+          223,
+          566
+        ],
+        "center": [
+          163,
+          507
+        ]
+      },
+      {
+        "symbol_class": "dining_table",
+        "bbox": [
+          127,
+          195,
+          532,
+          395
+        ],
+        "center": [
+          329,
+          295
+        ]
+      },
+      {
+        "symbol_class": "door",
+        "bbox": [
+          509,
+          419,
+          654,
+          576
+        ],
+        "center": [
+          581,
+          497
+        ]
+      }
+    ],
+    "doors": [
+      {
+        "symbol_class": "door",
+        "bbox": [
+          103,
+          449,
+          223,
+          566
+        ],
+        "center": [
+          163,
+          507
+        ]
+      },
+      {
+        "symbol_class": "door",
+        "bbox": [
+          509,
+          419,
+          654,
+          576
+        ],
+        "center": [
+          581,
+          497
+        ]
+      }
+    ]
+  },
+  "room_10": {
+    "room_class": "Room",
+    "room_type": "unknown",
+    "room_bbox": [
+      2,
+      24,
+      100,
+      1025
+    ],
+    "contained_symbols": [],
+    "doors": []
+  },
+  "room_11": {
+    "room_class": "Room",
+    "room_type": "unknown",
+    "room_bbox": [
+      656,
+      408,
+      843,
+      573
+    ],
+    "contained_symbols": [
+      {
+        "symbol_class": "stairs",
+        "bbox": [
+          785,
+          406,
+          846,
+          563
+        ],
+        "center": [
+          815,
+          484
+        ]
+      }
+    ],
+    "doors": []
+  },
+  "room_12": {
+    "room_class": "Room",
+    "room_type": "dining_room--reception",
+    "room_bbox": [
+      194,
+      261,
+      459,
+      356
+    ],
+    "contained_symbols": [
+      {
+        "symbol_class": "dining_table",
+        "bbox": [
+          127,
+          195,
+          532,
+          395
+        ],
+        "center": [
+          329,
+          295
+        ]
+      }
+    ],
+    "doors": []
+  }
+}

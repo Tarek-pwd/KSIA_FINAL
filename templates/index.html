@@ -1,0 +1,2306 @@
+
+ 
+<!-- Architect Detection -->
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Results • KSIA Layout Compliance Assistant</title>
+  <script src=https://cdn.tailwindcss.com></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary': '#001f3f',
+            'primary-hover': '#001633',
+            'primary-light': '#e6f3ff',
+            'accent': '#0066cc',
+            'accent-light': '#3399ff',
+            'accent-dark': '#004499',
+            'success': '#10b981',
+            'warning': '#f59e0b',
+            'danger': '#ef4444',
+            'dark': '#0f172a',
+            'light': '#f8fafc'
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+            'slide-up': 'slideUp 0.5s ease-out',
+            'slide-down': 'slideDown 0.5s ease-out',
+            'slide-left': 'slideLeft 0.5s ease-out',
+            'slide-right': 'slideRight 0.5s ease-out',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'bounce-slow': 'bounce 2s infinite',
+            'spin-slow': 'spin 3s linear infinite',
+            'fade-in': 'fadeIn 0.8s ease-out',
+            'scale-in': 'scaleIn 0.6s ease-out',
+            'gradient': 'gradient 8s ease infinite',
+            'wave': 'wave 2s linear infinite',
+            'morph': 'morph 8s ease-in-out infinite',
+            'typing': 'typing 1.4s infinite',
+            'shimmer': 'shimmer 2s linear infinite',
+            'rotate-y': 'rotateY 2s linear infinite',
+            'float-reverse': 'floatReverse 5s ease-in-out infinite'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  
+    * {
+  font-family: Arial, sans-serif;
+  }
+ 
+    /* Animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+    @keyframes floatReverse {
+      0%, 100% { transform: translateY(-20px) rotate(-5deg); }
+      50% { transform: translateY(0px) rotate(0deg); }
+    }
+    @keyframes glow {
+      from { box-shadow: 0 0 20px #0066cc, 0 0 40px #0066cc; }
+      to { box-shadow: 0 0 30px #0066cc, 0 0 60px #0066cc, 0 0 80px #0066cc; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes slideLeft {
+      from { transform: translateX(100px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideRight {
+      from { transform: translateX(-100px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes scaleIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes wave {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+    @keyframes morph {
+      0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+      50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+    }
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-10px); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -1000px 0; }
+      100% { background-position: 1000px 0; }
+    }
+    @keyframes rotateY {
+      from { transform: rotateY(0deg); }
+      to { transform: rotateY(360deg); }
+    }
+ 
+    @keyframes zoomIn {
+    from {
+      transform: scale(0.7);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  .animate-zoomIn {
+    animation: zoomIn 0.3s ease-out;
+  }
+    /* Modern Glass Effects */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px 0 rgba(0, 31, 63, 0.37);
+    }
+/*
+    .glass-card {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+} */
+ 
+    .glass-dark {
+      background: rgba(0, 31, 63, 0.3);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .glass-sidebar {
+      background: rgba(0, 31, 63, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    /* Gradient Backgrounds */
+    /* .gradient-bg {
+      background: linear-gradient(-45deg, #001f3f, #0066cc, #001f3f, #003366);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+    } */
+    .gradient-bg {
+            background-color: #001f3f;
+        }
+    .gradient-mesh {
+      background-image:
+        radial-gradient(at 40% 20%, hsla(210, 100%, 16%, 1) 0px, transparent 50%),
+        radial-gradient(at 80% 0%, hsla(210, 100%, 20%, 1) 0px, transparent 50%),
+        radial-gradient(at 0% 50%, hsla(210, 100%, 25%, 1) 0px, transparent 50%),
+        radial-gradient(at 80% 50%, hsla(210, 100%, 30%, 0.8) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, hsla(210, 100%, 35%, 0.6) 0px, transparent 50%);
+    }
+    /* Hover Effects */
+    .hover-lift {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hover-lift:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 25px 50px rgba(0, 31, 63, 0.3);
+    }
+    .hover-glow:hover {
+      box-shadow: 0 0 30px rgba(0, 102, 204, 0.6);
+    }
+    /* Professional Spinner */
+    .spinner-container {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+    .spinner-orbit {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 2px solid rgba(0, 102, 204, 0.1);
+      border-radius: 50%;
+    }
+    .spinner-orbit::before {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      right: -3px;
+      bottom: -3px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: #0066cc;
+      animation: spin 1.5s linear infinite;
+    }
+    .spinner-orbit:nth-child(2) {
+      width: 80px;
+      height: 80px;
+      margin: 20px;
+      animation: spin 2s linear reverse infinite;
+    }
+    .spinner-orbit:nth-child(3) {
+      width: 40px;
+      height: 40px;
+      margin: 40px;
+      animation: spin 1s linear infinite;
+    }
+    /* Sidebar Menu Styles */
+    .menu-item {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .menu-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 102, 204, 0.4), transparent);
+      transition: left 0.5s;
+    }
+    .menu-item:hover::before {
+      left: 100%;
+    }
+    .menu-item.active {
+      background: rgba(0, 102, 204, 0.2);
+      border-left: 4px solid #0066cc;
+    }
+    /* Chat Message Styles */
+    .chat-message {
+      animation: slideUp 0.4s ease-out;
+      transition: all 0.3s ease;
+    }
+    .chat-message:hover {
+      transform: translateX(5px);
+    }
+    .typing-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .typing-indicator span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #0066cc;
+      animation: typing 1.4s infinite;
+    }
+    .typing-indicator span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    .typing-indicator span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    /* Button Styles */
+    .btn-primary {
+      background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 102, 204, 0.4);
+    }
+    /* Status Indicators */
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+      position: relative;
+    }
+    .status-dot::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      border-radius: 50%;
+      background: inherit;
+      opacity: 0.3;
+      animation: pulse 2s infinite;
+    }
+    .status-ready {
+      background: #10b981;
+    }
+    .status-processing {
+      background: #f59e0b;
+      animation: pulse 1s infinite;
+    }
+    .status-error {
+      background: #ef4444;
+    }
+    /* Card Animations */
+    /* .card-3d {
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+    .card-3d:hover {
+      transform: rotateY(10deg) rotateX(-10deg);
+    } */
+    /* Shimmer Effect */
+    .shimmer {
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+      background-size: 1000px 100%;
+      animation: shimmer 2s linear infinite;
+    }
+    /* Notification Styles */
+    .notification {
+      animation: slideLeft 0.5s ease-out;
+    }
+    /* Scrollbar Styles */
+    /* ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 31, 63, 0.1);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 102, 204, 0.5);
+      border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 102, 204, 0.8);
+    } */
+ 
+    ::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1); /* light white for track */
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.8); /* white thumb */
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 1); /* brighter white on hover */
+}
+/* Loading Bar */
+.loading-bar {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 3px;
+background: linear-gradient(90deg, #0066cc, #00ccff, #0066cc);
+background-size: 200% 100%;
+animation: wave 2s linear infinite;
+z-index: 9999;
+opacity: 0;
+transition: opacity 0.3s;
+}
+    .loading-bar.active {
+      opacity: 1;
+    }
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+    }
+ 
+  .room-box {
+    position: absolute;
+    background: rgba(0, 102, 204, 0.2);
+    border: 2px solid #0066cc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    min-width: 60px;
+    min-height: 40px;
+    padding: 8px;
+    text-align: center;
+  }
+ 
+  .room-box:hover {
+    background: rgba(0, 102, 204, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 102, 204, 0.5);
+    z-index: 10;
+  }
+
+  
+ 
+  .room-box.selected {
+    background: rgba(0, 102, 204, 0.6);
+    border-color: #00ccff;
+    box-shadow: 0 0 20px rgba(0, 204, 255, 0.6);
+  }
+ 
+  .room-box.bathroom {
+    background: rgba(33, 150, 243, 0.2);
+    border-color: #2196F3;
+  }
+ 
+  .room-box.kitchen {
+    background: rgba(255, 152, 0, 0.2);
+    border-color: #FF9800;
+  }
+ 
+  .room-box.bedroom {
+    background: rgba(156, 39, 176, 0.2);
+    border-color: #9C27B0;
+  }
+ 
+  .room-box.living_room {
+    background: rgba(76, 175, 80, 0.2);
+    border-color: #4CAF50;
+  }
+ 
+  .room-box.unknown {
+    background: rgba(158, 158, 158, 0.2);
+    border-color: #9E9E9E;
+  }
+ 
+  .symbol-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: white;
+    margin: 0.25rem;
+  }
+ 
+  .symbol-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+ 
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+ 
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+  /* Add this CSS to your existing <style> section */
+
+/* Compact table styling */
+.compact-table {
+  max-height: 400px;
+  overflow-y: auto;
+  border-radius: 12px;
+}
+
+.compact-table.collapsed {
+  max-height: 200px;
+}
+
+/* Expand button styling */
+.expand-btn {
+  background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.expand-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+  background: linear-gradient(135deg, #0080ff 0%, #0066cc 100%);
+}
+
+/* Formatted response styling */
+.formatted-response {
+  font-family: Arial, sans-serif !important;
+  line-height: 1.6;
+}
+
+.formatted-response .requirement-label {
+  font-weight: bold;
+  color: #60a5fa; /* Light blue */
+  text-shadow: 0 0 4px rgba(96, 165, 250, 0.5);
+}
+
+.formatted-response .status-label {
+  font-weight: bold;
+  color: #fbbf24; /* Amber */
+  text-shadow: 0 0 4px rgba(251, 191, 36, 0.5);
+}
+
+.formatted-response .reason-label {
+  font-weight: bold;
+  color: #34d399; /* Emerald */
+  text-shadow: 0 0 4px rgba(52, 211, 153, 0.5);
+}
+
+/* Table row animation improvements */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in-up {
+  animation: slideInUp 0.3s ease-out forwards;
+}
+
+/* Improved scrollbar for compact table */
+.compact-table::-webkit-scrollbar {
+  width: 8px;
+}
+
+.compact-table::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.compact-table::-webkit-scrollbar-thumb {
+  background: rgba(0, 102, 204, 0.6);
+  border-radius: 4px;
+}
+
+.compact-table::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 102, 204, 0.8);
+}
+
+ 
+  </style>
+</head>
+<body class="gradient-bg min-h-screen font-sans overflow-x-hidden">
+  <!-- Loading Bar -->
+  <div id="loadingBar" class="loading-bar"></div>
+  <!-- Left Sidebar -->
+  <aside id="sidebar" class="fixed left-0 top-0 h-full w-72 glass-sidebar z-40 animate-slide-right">
+    <div class="p-6">
+     <!-- Logo Section -->
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex items-center space-x-3">
+            <!-- Image Logo -->
+            <img src="/static/oavduc7W_400x400-removebg-preview.png" alt="Logo" style="width: 90px; height: 90px;" class="rounded-lg object-cover">
+ 
+            </svg>
+          </div>
+          <h1 class="text-xl font-bold text-white">KSIA Assistant</h1>
+        </div>
+        <button id="sidebarToggle" class="lg:hidden text-white hover:text-accent transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <!-- Status Indicator -->
+      <div class="mb-8 p-4 glass-card rounded-xl">
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-300">System Status</span>
+          <div class="flex items-center">
+            <span class="status-dot status-ready"></span>
+            <span class="text-xs text-green-400 font-medium">Online</span>
+          </div>
+        </div>
+      </div>
+      <!-- Navigation Menu -->
+      <nav class="space-y-2">
+        <div class="menu-item p-4 rounded-xl cursor-pointer hover:bg-white/10 active" id="menuDashboard">
+          <div class="flex items-center space-x-3">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            <span class="text-white font-medium">Dashboard</span>
+          </div>
+        </div>
+        <div class="menu-item p-4 rounded-xl cursor-pointer hover:bg-white/10" id="menuAnalysis">
+          <div class="flex items-center space-x-3">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+            <span class="text-gray-400 font-medium">Analysis Results</span>
+            <span id="analysisStatus" class="ml-auto text-xs bg-gray-700 text-gray-400 px-2 py-1 rounded-full">Not Started</span>
+          </div>
+        </div>
+        <div class="menu-item p-4 rounded-xl cursor-pointer hover:bg-white/10" id="menuCompliance">
+          <div class="flex items-center space-x-3">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span class="text-gray-400 font-medium">Compliance Check</span>
+            <span id="complianceStatus" class="ml-auto text-xs bg-gray-700 text-gray-400 px-2 py-1 rounded-full">Pending</span>
+          </div>
+        </div>
+        <div class="menu-item p-4 rounded-xl cursor-pointer hover:bg-white/10" id="menuChat">
+          <div class="flex items-center space-x-3">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+            <span class="text-gray-400 font-medium">AI Assistant</span>
+            <span class="ml-auto w-2 h-2 bg-accent rounded-full animate-pulse"></span>
+          </div>
+        </div>
+        <div class="h-px bg-white/10 my-4"></div>
+        <div class="menu-item p-4 rounded-xl cursor-pointer hover:bg-white/10" id="menuHelp">
+          <div class="flex items-center space-x-3">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span class="text-gray-400 font-medium">Help & Support</span>
+          </div>
+        </div>
+      </nav>
+      <!-- Upload New Button -->
+      <div class="absolute bottom-6 left-6 right-6">
+        <button onclick="window.location.href='/'" class="w-full btn-primary text-white py-3 px-4 rounded-xl font-semibold flex items-center justify-center space-x-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+          </svg>
+          <span>Upload New Files</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+  <!-- Main Content Area -->
+  <main class="ml-72 min-h-screen">
+    <!-- Header -->
+    <!-- <header class="relative h-64 overflow-hidden">
+      <div class="absolute inset-0 gradient-mesh"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-accent/60"></div>
+      <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('/static/king_salman_international_airport_cover.jpeg');"></div>
+       -->
+<!--
+       <header class="relative h-64 overflow-hidden">
+        <div class="absolute inset-0 gradient-mesh"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-accent/60"></div>
+      </header> -->
+ 
+      <header class="relative h-64 overflow-hidden bg-cover bg-center" style="background-image: url('/static/new demo background .jpg');">
+        <!-- Optional overlay if needed -->
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-accent/60 opacity-80"></div>
+        <div class="absolute inset-0 gradient-mesh"></div>
+    
+      
+      <!-- Animated Particles -->
+      <div class="absolute inset-0">
+        <div class="absolute top-10 left-10 w-3 h-3 bg-accent rounded-full animate-float"></div>
+        <div class="absolute top-20 right-20 w-2 h-2 bg-accent-light rounded-full animate-float-reverse"></div>
+        <div class="absolute bottom-10 left-1/3 w-4 h-4 bg-primary-light rounded-full animate-pulse-slow"></div>
+        <div class="absolute bottom-20 right-1/3 w-2 h-2 bg-accent rounded-full animate-float"></div>
+      </div>
+      <div class="relative z-10 h-full flex items-center justify-between px-8 animate-slide-down">
+        <div class="space-y-4">
+          <!-- <h1 class="text-5xl font-black text-white">
+            KSIA Layout <span class="text-accent-light">Compliance</span>
+          </h1> -->
+          <h1 class="text-5xl font-black text-white">
+            KSIA Layout <span class="text-white">Compliance</span>
+          </h1>
+         
+          <p class="text-xl text-blue-100">Intelligent Analysis Results</p>
+        </div>
+      
+        <!-- Logo -->
+        <!-- <div class="animate-float">
+          <img src="/static/vectara-ai-removebg-preview.png" alt="Vectara Logo" class="h-[170px] opacity-90" /> -->
+          <img src="/static/vectara-ai-removebg-preview.png"
+     alt="Vectara Logo"
+     class="h-[200px] opacity-90" />
+        </div>
+      </div>
+    </header>
+    <!-- Dashboard Content -->
+    <div class="px-8 py-8">
+      <!-- Top Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="glass-card rounded-2xl p-6 animate-scale-in hover-lift">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-400 text-sm">Files Uploaded</p>
+              <p class="text-2xl font-bold text-white mt-1">2</p>
+            </div>
+            <div class="w-12 h-12 bg-success/20 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-6 animate-scale-in animation-delay-100 hover-lift">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-400 text-sm">Analysis Status</p>
+              <p id="analysisStatusText" class="text-2xl font-bold text-white mt-1">Ready</p>
+            </div>
+            <div class="w-12 h-12 bg-warning/20 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-6 animate-scale-in animation-delay-200 hover-lift">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-400 text-sm">Compliance Score</p>
+              <p id="complianceScore" class="text-2xl font-bold text-white mt-1">-</p>
+            </div>
+            <div class="w-12 h-12 bg-accent/20 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Main Content Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- DXF Preview Card -->
+        <!-- <div class="glass-card rounded-3xl p-8 animate-fade-in card-3d">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-white">Floor Plan</h2>
+            <span class="status-dot status-ready"></span>
+          </div>
+          <div class="relative group overflow-hidden rounded-2xl">
+            <img id="dxfImage" class="w-full h-96 object-contain bg-white/5" />
+            <div class="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute bottom-4 left-4 right-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+              <p id="dxfName" class="text-white font-medium">Loading...</p>
+            </div>
+          </div>
+        </div> -->
+ 
+        <!-- DXF Preview Card -->
+      <div class="glass-card rounded-3xl p-8">
+        <!-- <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-white">Floor Plan</h2>
+          <span class="status-dot status-ready"></span>
+        </div> -->
+        <div class="mb-6">
+          <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-white">Floor Plan</h2>
+            <span class="status-dot status-ready"></span>
+          </div>
+          <p id="dxfName" class="text-sm text-blue-200 mt-1">Drawing4.dxf</p>
+        </div>
+          
+          <div class="relative overflow-hidden rounded-2xl">
+            <img
+              id="dxfImage"
+              class="w-full h-96 object-contain bg-white/5 cursor-pointer"
+              onclick="openImagePopup(this.src)"
+            />
+            <!-- <div class="absolute bottom-4 left-4 right-4">
+              <p id="dxfName" class="text-white font-medium">Loading...</p>
+            </div> -->
+          </div>
+        </div>
+        <!-- Image Popup Modal -->
+        <div
+          id="imagePopup"
+          class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 hidden"
+          onclick="closeImagePopup()"
+        >
+          <div class="relative animate-zoomIn" onclick="event.stopPropagation()">
+            <img
+              id="popupImage"
+              class="max-w-4xl max-h-[90vh] rounded-xl shadow-2xl"
+            />
+            <button
+            onclick="closeImagePopup()"
+            class="absolute -top-4 -right-4 bg-white text-black text-3xl w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:bg-red-600 hover:text-white transition-all"
+            title="Close"
+          >
+            &times;
+          </button>
+        
+          </div>
+        </div>
+ 
+        <!-- Document Preview Card -->
+        <div class="glass-card rounded-3xl p-8">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-white">Compliance Document</h2>
+            <span class="status-dot status-ready"></span>
+          </div>
+          <div class="bg-white/5 rounded-2xl p-6 h-96 overflow-hidden">
+            <p id="docName" class="text-accent-light font-medium mb-4">Loading...</p>
+            <div id="docText" class="text-gray-300 text-sm font-bold leading-relaxed overflow-y-auto h-80 pr-4 whitespace-pre-line"></div>
+          </div>
+        </div>      
+      </div>
+     
+ 
+      <!-- Analysis Control Panel -->
+      <div class="glass-card rounded-3xl p-8 mb-8 animate-slide-up">
+        <h2 class="text-3xl font-bold text-white mb-8 text-center">Analysis Control Center</h2>
+      
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Run Analysis Button -->
+          <!-- <button id="analyzeBtn" class="group relative overflow-hidden bg-gradient-to-r from-accent to-accent-dark text-white px-8 py-6 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <div class="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+            <div class="relative flex items-center justify-center space-x-3">
+              <svg class="w-8 h-8 group-hover:animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+              <span>Run Full Analysis</span>
+            </div>
+          </button> -->
+ 
+          <button id="analyzeBtn" class="group relative overflow-hidden bg-gradient-to-r from-green-500 to-green-700 text-white px-8 py-6 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <div class="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+            <div class="relative flex items-center justify-center space-x-3">
+              <svg class="w-8 h-8 group-hover:animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+              <span>Run Full Analysis</span>
+            </div>
+          </button>
+        
+ 
+          <!-- Check Violations Button -->
+          <button id="violationBtn" class="group relative overflow-hidden bg-gradient-to-r from-warning to-danger text-white px-8 py-6 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <div class="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right"></div>
+            <div class="relative flex items-center justify-center space-x-3">
+              <svg class="w-8 h-8 group-hover:animate-bounce-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+              </svg>
+              <span>Check Compliance</span>
+            </div>
+          </button>
+        </div>
+      </div>
+      <!-- Results Section -->
+     <!-- Results Section -->
+<div id="resultsSection" class="hidden">
+  <!-- Visual Analysis Results -->
+  <div id="visualResults" class="hidden mb-8">
+    <div class="glass-card rounded-3xl p-8 animate-scale-in">
+      <h2 class="text-3xl font-bold text-white mb-8 text-center">Visual Analysis Results</h2>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <!-- Object Detection -->
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-xl font-bold text-white flex items-center">
+                    <span class="w-2 h-2 bg-accent rounded-full mr-2 animate-pulse"></span>
+                    Object Detection
+                  </h3>
+                  <div class="px-3 py-1 bg-success/90 text-white rounded-full text-sm font-medium backdrop-blur-sm">
+                    ✓ Analyzed
+                  </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-2xl hover-glow transition-all duration-300">
+                  <img id="detImage" class="w-full rounded-2xl" />
+                </div>
+              </div>
+    
+              <!-- Room Segmentation -->
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-xl font-bold text-white flex items-center">
+                    <span class="w-2 h-2 bg-accent rounded-full mr-2 animate-pulse"></span>
+                    Room Segmentation
+                  </h3>
+                  <div class="px-3 py-1 bg-accent/90 text-white rounded-full text-sm font-medium backdrop-blur-sm">
+                    ✓ Segmented
+                  </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-2xl hover-glow transition-all duration-300">
+                  <img id="segImage" class="w-full rounded-2xl" />
+                </div>
+              </div>
+            </div>
+           
+          </div>
+        </div>
+      </div>
+        <!-- Violation Report
+        <div id="violationResult" class="hidden mb-8">
+          <div class="glass-card rounded-3xl p-8 border-l-4 border-warning animate-slide-left">
+            <div class="flex items-center space-x-3 mb-6">
+              <div class="w-12 h-12 bg-warning/20 rounded-full flex items-center justify-center animate-pulse-slow">
+                <svg class="w-6 h-6 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-white">Compliance Analysis Report</h3>
+            </div>
+            <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6">
+              <pre id="violationText" class="text-gray-300 whitespace-pre-wrap leading-relaxed font-mono text-sm"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main> -->
+ 
+  <!-- Replace the entire violation result section with this fixed version -->
+  <div id="violationResult" class="hidden mb-8">
+    <div class="glass-card rounded-3xl p-8 border-l-4 border-warning animate-slide-left">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-3">
+          <div class="w-12 h-12 bg-warning/20 rounded-full flex items-center justify-center animate-pulse-slow">
+            <svg class="w-6 h-6 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-white">Compliance Analysis Report</h3>
+        </div>
+       
+        <!-- Back to Stream button (hidden initially) -->
+        <button id="backToStreamBtn" class="btn-secondary hidden">
+          <span>← Back to Stream</span>
+        </button>
+      </div>
+ 
+<!-- Summary Statistics Bars - Add this after the compliance report header -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+ 
+  <!-- Passed Items Bar -->
+  <div class="glass-card rounded-2xl p-6 hover-lift animate-scale-in cursor-pointer transition-all duration-300 hover:scale-105"
+       onclick="toggleCategoryDetails('passed')" id="passedCard">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-12 h-12 bg-success/20 rounded-xl flex items-center justify-center text-success text-xl font-bold">
+          ✔
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white">Passed</h3>
+          <p class="text-sm text-green-300">Requirements Met</p>
+        </div>
+      </div>
+      <div class="text-right">
+        <div class="text-3xl font-black text-success" id="passedCount">1</div>
+        <div class="text-xs text-green-300/80">items</div>
+      </div>
+    </div>
+   
+    <div class="w-full bg-white/10 rounded-full h-2 mb-3">
+      <div class="bg-gradient-to-r from-success to-green-400 h-2 rounded-full transition-all duration-1000"
+           style="width: 5.6%;" id="passedProgress"></div>
+    </div>
+   
+    <div class="flex justify-between text-xs">
+      <span class="text-green-300">5.6% of total</span>
+      <span class="text-success font-medium">Click to expand</span>
+    </div>
+  </div>
+ 
+  <!-- Violations Bar -->
+  <div class="glass-card rounded-2xl p-6 hover-lift animate-scale-in cursor-pointer transition-all duration-300 hover:scale-105"
+       onclick="toggleCategoryDetails('violations')" id="violationsCard">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-12 h-12 bg-danger/20 rounded-xl flex items-center justify-center text-danger text-xl font-bold">
+          ✘
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white">Violations</h3>
+          <p class="text-sm text-red-300">Non-Compliant</p>
+        </div>
+      </div>
+      <div class="text-right">
+        <div class="text-3xl font-black text-danger" id="violationCount">15</div>
+        <div class="text-xs text-red-300/80">items</div>
+      </div>
+    </div>
+   
+    <div class="w-full bg-white/10 rounded-full h-2 mb-3">
+      <div class="bg-gradient-to-r from-danger to-red-400 h-2 rounded-full transition-all duration-1000"
+           style="width: 83.3%;" id="violationProgress"></div>
+    </div>
+   
+    <div class="flex justify-between text-xs">
+      <span class="text-red-300">83.3% of total</span>
+      <span class="text-danger font-medium">Click to expand</span>
+    </div>
+  </div>
+ 
+  <!-- Unclear Items Bar -->
+  <div class="glass-card rounded-2xl p-6 hover-lift animate-scale-in cursor-pointer transition-all duration-300 hover:scale-105"
+       onclick="toggleCategoryDetails('unclear')" id="unclearCard">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-12 h-12 bg-warning/20 rounded-xl flex items-center justify-center text-warning text-xl font-bold">
+          ⚠
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white">Unclear</h3>
+          <p class="text-sm text-yellow-300">Needs Review</p>
+        </div>
+      </div>
+      <div class="text-right">
+        <div class="text-3xl font-black text-warning" id="unclearCount">2</div>
+        <div class="text-xs text-yellow-300/80">items</div>
+      </div>
+    </div>
+   
+    <div class="w-full bg-white/10 rounded-full h-2 mb-3">
+      <div class="bg-gradient-to-r from-warning to-yellow-400 h-2 rounded-full transition-all duration-1000"
+           style="width: 11.1%;" id="unclearProgress"></div>
+    </div>
+   
+    <div class="flex justify-between text-xs">
+      <span class="text-yellow-300">11.1% of total</span>
+      <span class="text-warning font-medium">Click to expand</span>
+    </div>
+  </div>
+</div>
+ 
+<!-- Expandable Category Details Tables -->
+<div id="categoryDetailsContainer" class="mb-6">
+  <!-- Passed Items Table -->
+  <div id="passedDetails" class="hidden glass-card rounded-2xl p-6 mb-4 animate-slide-down">
+    <div class="flex items-center justify-between mb-4">
+      <h4 class="text-xl font-bold text-success flex items-center">
+        <span class="w-2 h-2 bg-success rounded-full mr-3 animate-pulse"></span>
+        Passed Requirements (1)
+      </h4>
+      <button onclick="toggleCategoryDetails('passed')" class="text-white/60 hover:text-white transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm font-mono text-gray-300">
+        <thead>
+          <tr class="uppercase text-green-100 border-b border-green-400/30 text-xs">
+            <th class="py-2 pr-4">Requirement</th>
+            <th class="py-2 pr-4">Status</th>
+            <th class="py-2">Reason</th>
+          </tr>
+        </thead>
+        <tbody id="passedTableBody">
+          <!-- Passed items will be populated here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+ 
+  <!-- Violations Table -->
+  <div id="violationsDetails" class="hidden glass-card rounded-2xl p-6 mb-4 animate-slide-down">
+    <div class="flex items-center justify-between mb-4">
+      <h4 class="text-xl font-bold text-danger flex items-center">
+        <span class="w-2 h-2 bg-danger rounded-full mr-3 animate-pulse"></span>
+        Violations Found (15)
+      </h4>
+      <button onclick="toggleCategoryDetails('violations')" class="text-white/60 hover:text-white transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm font-mono text-gray-300">
+        <thead>
+          <tr class="uppercase text-red-100 border-b border-red-400/30 text-xs">
+            <th class="py-2 pr-4">Requirement</th>
+            <th class="py-2 pr-4">Status</th>
+            <th class="py-2">Reason</th>
+          </tr>
+        </thead>
+        <tbody id="violationsTableBody">
+          <!-- Violation items will be populated here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+ 
+  <!-- Unclear Items Table -->
+  <div id="unclearDetails" class="hidden glass-card rounded-2xl p-6 mb-4 animate-slide-down">
+    <div class="flex items-center justify-between mb-4">
+      <h4 class="text-xl font-bold text-warning flex items-center">
+        <span class="w-2 h-2 bg-warning rounded-full mr-3 animate-pulse"></span>
+        Unclear Requirements (2)
+      </h4>
+      <button onclick="toggleCategoryDetails('unclear')" class="text-white/60 hover:text-white transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm font-mono text-gray-300">
+        <thead>
+          <tr class="uppercase text-yellow-100 border-b border-yellow-400/30 text-xs">
+            <th class="py-2 pr-4">Requirement</th>
+            <th class="py-2 pr-4">Status</th>
+            <th class="py-2">Reason</th>
+          </tr>
+        </thead>
+        <tbody id="unclearTableBody">
+          <!-- Unclear items will be populated here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+ 
+<script>
+// Function to toggle category details
+function toggleCategoryDetails(category) {
+  const detailsElement = document.getElementById(category + 'Details');
+  const isCurrentlyVisible = !detailsElement.classList.contains('hidden');
+  const streamingOutput = document.getElementById('streamingOutput');
+  const showTableContainer = document.getElementById('showTableContainer');
+  const formattedTable = document.getElementById('formattedTable');
+ 
+  // Hide all category details first
+  ['passed', 'violations', 'unclear'].forEach(cat => {
+    const element = document.getElementById(cat + 'Details');
+    const card = document.getElementById(cat === 'violations' ? 'violationsCard' : cat + 'Card');
+   
+    element.classList.add('hidden');
+    card.classList.remove('ring-2', 'ring-blue-400', 'transform', 'scale-105');
+  });
+ 
+  // If the clicked category wasn't visible, show it
+  if (!isCurrentlyVisible) {
+    detailsElement.classList.remove('hidden');
+    const card = document.getElementById(category === 'violations' ? 'violationsCard' : category + 'Card');
+    card.classList.add('ring-2', 'ring-blue-400', 'transform', 'scale-105');
+   
+    // Hide streaming output and other tables when expanding a category
+    streamingOutput.classList.add('hidden');
+    showTableContainer.classList.add('hidden');
+    formattedTable.classList.add('hidden');
+   
+    // Populate the table with filtered data
+    populateCategoryTable(category);
+   
+    // Smooth scroll to the expanded table
+    setTimeout(() => {
+      detailsElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }, 100);
+  } else {
+    // If we're closing the expanded view, show the streaming output again
+    streamingOutput.classList.remove('hidden');
+    if (complianceChecked) {
+      showTableContainer.classList.remove('hidden');
+    }
+  }
+}
+ 
+// Function to populate category tables with filtered data
+function populateCategoryTable(category) {
+  if (!violationStreamData) return;
+ 
+  const violations = parseViolationData(violationStreamData);
+  let filteredData = [];
+ 
+  // Filter data based on category
+  switch(category) {
+    case 'passed':
+      filteredData = violations.filter(v => v.status === 'PASS');
+      break;
+    case 'violations':
+      filteredData = violations.filter(v => v.status === 'VIOLATION');
+      break;
+    case 'unclear':
+      filteredData = violations.filter(v => v.status === 'UNCLEAR');
+      break;
+  }
+ 
+  const tableBody = document.getElementById(category === 'violations' ? 'violationsTableBody' : category + 'TableBody');
+  tableBody.innerHTML = '';
+ 
+  // Populate table rows
+  filteredData.forEach((item, index) => {
+    const row = document.createElement('tr');
+    row.className = 'border-b border-gray-600/30 hover:bg-white/5 transition-colors';
+   
+    let statusClass = 'text-yellow-300';
+    let statusIcon = '⚠';
+   
+    if (item.status === 'PASS') {
+      statusClass = 'text-green-400';
+      statusIcon = '✔';
+    } else if (item.status === 'VIOLATION') {
+      statusClass = 'text-red-400';
+      statusIcon = '✘';
+    }
+   
+    row.innerHTML = `
+      <td class="py-3 pr-4 font-medium">${item.requirement}</td>
+      <td class="py-3 pr-4 ${statusClass} font-bold">${statusIcon} ${item.status}</td>
+      <td class="py-3 text-sm">${item.reason}</td>
+    `;
+   
+    // Add animation delay for each row
+    row.style.animationDelay = `${index * 0.1}s`;
+    row.classList.add('animate-fade-in');
+   
+    tableBody.appendChild(row);
+  });
+ 
+  // Add empty state if no data
+  if (filteredData.length === 0) {
+    const emptyRow = document.createElement('tr');
+    emptyRow.innerHTML = `
+      <td colspan="3" class="py-6 text-center text-gray-400">
+        No ${category} items found
+      </td>
+    `;
+    tableBody.appendChild(emptyRow);
+  }
+}
+</script>
+ 
+      <!-- Raw streaming output -->
+      <div id="streamingOutput" class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 mb-4">
+        <pre id="violationText" class="text-gray-300 whitespace-pre-wrap leading-relaxed font-mono text-sm"></pre>
+      </div>
+ 
+      <!-- Buttons container -->
+      <div id="showTableContainer" class="hidden text-center">
+        <div class="flex justify-center gap-4">
+          <button id="showTableBtn" class="btn-primary text-white py-3 px-6 rounded-xl font-semibold flex items-center justify-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
+            </svg>
+            <span>View Summary Table</span>
+          </button>
+         
+          <button id="viewRoomLayoutBtn" class="btn-primary text-white py-3 px-6 rounded-xl font-semibold flex items-center justify-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            <span>View Room Layout</span>
+          </button>
+        </div>
+      </div>
+ 
+      <!-- Formatted table (hidden initially) -->
+      <div id="formattedTable" class="hidden bg-white/5 backdrop-blur-sm rounded-2xl p-6 overflow-x-auto">
+        <table class="w-full text-left text-sm font-mono text-gray-300 table-auto">
+          <thead>
+            <tr class="uppercase text-blue-100 border-b border-blue-300 text-xs">
+              <th class="py-2 pr-4">Requirement</th>
+              <th class="py-2 pr-4">Status</th>
+              <th class="py-2">Reason</th>
+            </tr>
+          </thead>
+          <tbody id="violationTableBody">
+            <!-- Table rows will be populated here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Room Layout Modal -->
+  <div id="roomLayoutModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+    <div class="glass-card rounded-3xl p-8 w-[90vw] h-[90vh] overflow-hidden animate-scale-in">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-3xl font-bold text-white">Room Layout Visualization</h2>
+        <button id="closeLayoutBtn" class="text-white/80 hover:text-white transition-colors">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+     
+      <div class="flex h-[calc(100%-5rem)] gap-6">
+        <!-- Room Layout Canvas -->
+        <div class="flex-1 bg-white/5 rounded-2xl p-4 relative overflow-auto">
+          <div id="roomLayoutContainer" class="relative w-full h-full min-w-[800px] min-h-[600px]">
+            <!-- Rooms will be rendered here -->
+          </div>
+        </div>
+       
+        <!-- Room Details Panel -->
+        <div id="roomDetailsPanel" class="w-96 bg-white/5 rounded-2xl p-6 overflow-y-auto hidden">
+          <h3 class="text-xl font-bold text-white mb-4">Room Details</h3>
+          <div id="roomDetailsContent">
+            <!-- Room details will appear here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+     
+ 
+ 
+ 
+ 
+ 
+      
+    
+ 
+<!-- AI Chat Assistant -->
+<div id="chatAssistant" class="fixed bottom-8 right-8 z-50 hidden">
+  <div class="glass-card rounded-3xl shadow-2xl w-96 animate-scale-in flex flex-col">
+  
+    <!-- Chat Header -->
+    <div class="bg-gradient-to-r from-green-600 to-green-800 p-4 rounded-t-3xl">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-white font-bold">AI Assistant</h3>
+            <p class="text-xs text-white/80 flex items-center">
+              <span class="w-2 h-2 bg-green-400 rounded-full mr-1 animate-pulse"></span>
+              Online
+            </p>
+          </div>
+        </div>
+        <button id="closeChatBtn" class="text-white/80 hover:text-white transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <!-- Chat Messages -->
+    <div id="chatHistory" class="h-96 overflow-y-auto p-4 space-y-3 bg-green-900/10 flex flex-col">
+      <!-- AI Message -->
+      <div class="chat-message-ai bg-green-100 text-gray-800 px-4 py-3 rounded-2xl rounded-bl-sm w-fit max-w-[85%]">
+        <p class="text-sm">Hello! I'm your AI compliance assistant. Ask me anything about your floor plan analysis.</p>
+      </div>
+      <!-- User Message -->
+      <div class="chat-message-user bg-green-600 text-black px-4 py-3 rounded-2xl rounded-br-sm self-end w-fit max-w-[85%]">
+        <p class="text-sm">Hello</p>
+        </div>
+      <!-- AI Message Example -->
+      <div class="chat-message-ai bg-green-100 text-gray-800 px-4 py-3 rounded-2xl rounded-bl-sm w-fit max-w-[85%]">
+        <p class="text-sm">
+          The AutoCAD floor plan reveals 4 rooms: 1. A Living Room, containing two sofas, a table, a dining table, stairs, and two doors. 2. A Bathroom with a toilet, no doors listed. 3. An Unknown room type with no symbols or doors listed. 4. A Kitchen with a hob, a kitchen sink, and a door.
+        </p>
+      </div>
+    </div>
+    <!-- Chat Input -->
+    <div class="p-4 border-t border-white/10">
+      <div class="flex gap-3">
+        <input id="chatInput" type="text" placeholder="Type your message..."
+        class="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all" />
+        <button id="sendBtn" class="bg-green-600 hover:bg-green-700 text-white p-3 rounded-xl">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Chat Toggle Button -->
+<button id="chatToggleBtn"
+class="fixed bottom-8 right-8 w-16 h-16 bg-green-600 hover:bg-green-700 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center z-40 animate-bounce-slow">
+  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+  </svg>
+  <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
+</button>
+ 
+  <!-- Professional Loading Modal -->
+  <div id="loadingModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+    <div class="glass-card rounded-3xl p-12 animate-scale-in">
+      <div class="spinner-container mx-auto mb-6">
+        <div class="spinner-orbit"></div>
+        <div class="spinner-orbit"></div>
+        <div class="spinner-orbit"></div>
+      </div>
+      <h3 id="loadingText" class="text-2xl font-bold text-white text-center mb-2">Processing Analysis</h3>
+      <p class="text-gray-400 text-center">This may take a few moments...</p>
+    </div>
+  </div>
+  <!-- Notification Container -->
+  <div id="notificationContainer" class="fixed top-8 right-8 z-50 space-y-4"></div>
+  <script>
+    // Global state
+    let analysisComplete = false;
+    let complianceChecked = false;
+    let violationStreamData = '';
+    let roomData = null;
+    let serverPaths = null;
+    function openImagePopup(src) {
+      const popup = document.getElementById("imagePopup");
+      const popupImg = document.getElementById("popupImage");
+      popupImg.src = src;
+      popup.classList.remove("hidden");
+    }
+    function closeImagePopup() {
+      const popup = document.getElementById("imagePopup");
+      popup.classList.add("hidden");
+    }
+ 
+    // Show notification
+    function showNotification(message, type = 'info') {
+      const notifContainer = document.getElementById('notificationContainer');
+      const notif = document.createElement('div');
+      notif.className = `notification glass-card px-6 py-4 rounded-xl flex items-center space-x-3 ${
+        type === 'success' ? 'border-l-4 border-success' :
+        type === 'error' ? 'border-l-4 border-danger' :
+        type === 'warning' ? 'border-l-4 border-warning' :
+        'border-l-4 border-accent'
+      }`;
+    
+      const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : type === 'warning' ? '!' : 'i';
+      const iconColor = type === 'success' ? 'text-success' : type === 'error' ? 'text-danger' : type === 'warning' ? 'text-warning' : 'text-accent';
+    
+      notif.innerHTML = `
+        <div class="w-8 h-8 ${iconColor} bg-white/10 rounded-full flex items-center justify-center font-bold">${icon}</div>
+        <p class="text-white">${message}</p>
+      `;
+    
+      notifContainer.appendChild(notif);
+    
+      setTimeout(() => {
+        notif.style.opacity = '0';
+        setTimeout(() => notif.remove(), 300);
+      }, 5000);
+    }
+    // Show/hide loading
+    function showLoading(text = 'Processing...') {
+      document.getElementById('loadingModal').classList.remove('hidden');
+      document.getElementById('loadingText').textContent = text;
+      document.getElementById('loadingBar').classList.add('active');
+    }
+    function hideLoading() {
+      document.getElementById('loadingModal').classList.add('hidden');
+      document.getElementById('loadingBar').classList.remove('active');
+    }
+ 
+    // Parse violation data from the streamed text
+    function parseViolationData(text) {
+      const violations = [];
+     
+      // Split by the separator '---'
+      const sections = text.split('---').filter(section => section.trim());
+     
+      sections.forEach(section => {
+        const lines = section.trim().split('\n').filter(line => line.trim());
+       
+        let requirement = '';
+        let status = '';
+        let reason = '';
+       
+        lines.forEach(line => {
+          if (line.startsWith('REQUIREMENT:')) {
+            requirement = line.replace('REQUIREMENT:', '').trim();
+          } else if (line.startsWith('STATUS:')) {
+            status = line.replace('STATUS:', '').trim();
+          } else if (line.startsWith('REASON:')) {
+            reason = line.replace('REASON:', '').trim();
+          }
+        });
+       
+        // Only add if we have all required fields
+        if (requirement && status && reason) {
+          violations.push({
+            requirement: requirement,
+            status: status,
+            reason: reason
+          });
+        }
+      });
+     
+      // If no violations were parsed, return some default data
+      if (violations.length === 0) {
+        console.warn('No violations parsed from text. Using fallback data.');
+        return [
+          {
+            requirement: 'Data Format Error',
+            status: 'UNCLEAR',
+            reason: 'Could not parse compliance data. Please check the response format.'
+          }
+        ];
+      }
+     
+      return violations;
+    }
+ 
+    // Room Layout Functions
+    function initializeRoomLayout() {
+      const viewLayoutBtn = document.getElementById('viewRoomLayoutBtn');
+      const roomLayoutModal = document.getElementById('roomLayoutModal');
+      const closeLayoutBtn = document.getElementById('closeLayoutBtn');
+      const roomLayoutContainer = document.getElementById('roomLayoutContainer');
+      const roomDetailsPanel = document.getElementById('roomDetailsPanel');
+      const roomDetailsContent = document.getElementById('roomDetailsContent');
+     
+      if (!viewLayoutBtn) {
+        console.error('View Room Layout button not found');
+        return;
+      }
+     
+      viewLayoutBtn.addEventListener('click', async () => {
+        console.log('View Room Layout clicked');
+        try {
+          showLoading('Loading room layout...');
+          const response = await fetch('/get-room-data');
+         
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+         
+          roomData = await response.json();
+          console.log('Room data received:', roomData);
+         
+          hideLoading();
+          displayRoomLayout();
+          roomLayoutModal.classList.remove('hidden');
+        } catch (error) {
+          hideLoading();
+          console.error('Error fetching room data:', error);
+          showNotification('Failed to load room layout data: ' + error.message, 'error');
+        }
+      });
+     
+      closeLayoutBtn.addEventListener('click', () => {
+        roomLayoutModal.classList.add('hidden');
+        roomDetailsPanel.classList.add('hidden');
+      });
+     
+      function displayRoomLayout() {
+        if (!roomData || Object.keys(roomData).length === 0) {
+          roomLayoutContainer.innerHTML = '<div class="text-white text-center">No room data available</div>';
+          return;
+        }
+       
+        roomLayoutContainer.innerHTML = '';
+       
+        // Fixed box dimensions
+        const boxWidth = 120;
+        const boxHeight = 100;
+        const spacing = 20;
+        const columns = 4; // Number of columns in the grid
+       
+        // Create room boxes in a grid layout
+        Object.entries(roomData).forEach(([roomId, room], index) => {
+          const row = Math.floor(index / columns);
+          const col = index % columns;
+         
+          // Calculate position based on grid
+          const x = col * (boxWidth + spacing) + spacing;
+          const y = row * (boxHeight + spacing) + spacing;
+         
+          const roomBox = document.createElement('div');
+          roomBox.className = `room-box ${room.room_type || 'unknown'}`;
+          roomBox.style.left = `${x}px`;
+          roomBox.style.top = `${y}px`;
+          roomBox.style.width = `${boxWidth}px`;
+          roomBox.style.height = `${boxHeight}px`;
+          roomBox.dataset.roomId = roomId;
+         
+          // Add room label with better text handling
+          const roomLabel = document.createElement('div');
+          roomLabel.className = 'text-center flex flex-col justify-center h-full';
+          roomLabel.innerHTML = `
+            <div class="font-bold text-xs mb-1">${roomId.replace('room_', 'R').toUpperCase()}</div>
+            <div class="text-xs opacity-90 mb-1">${room.room_type.replace('_', ' ')}</div>
+            <div class="text-xs opacity-70">${room.contained_symbols.length} items</div>
+          `;
+          roomBox.appendChild(roomLabel);
+         
+          // Click handler
+          roomBox.addEventListener('click', () => showRoomDetails(roomId, room));
+         
+          roomLayoutContainer.appendChild(roomBox);
+        });
+       
+        // Adjust container height based on number of rows
+        const totalRows = Math.ceil(Object.keys(roomData).length / columns);
+        const containerHeight = totalRows * (boxHeight + spacing) + spacing;
+        roomLayoutContainer.style.minHeight = `${containerHeight}px`;
+      }
+     
+      function showRoomDetails(roomId, room) {
+        // Update selected state
+        document.querySelectorAll('.room-box').forEach(box => {
+          box.classList.remove('selected');
+        });
+        document.querySelector(`[data-room-id="${roomId}"]`).classList.add('selected');
+       
+        // Show details panel
+        roomDetailsPanel.classList.remove('hidden');
+       
+        // Populate room details
+        roomDetailsContent.innerHTML = `
+          <div class="space-y-4">
+            <div class="bg-white/10 rounded-xl p-4">
+              <h4 class="text-lg font-bold text-white mb-2">${roomId.replace('_', ' ').toUpperCase()}</h4>
+              <div class="text-sm text-gray-300 space-y-1">
+                <p><span class="text-gray-400">Type:</span> ${room.room_type.replace('_', ' ')}</p>
+                <p><span class="text-gray-400">Area:</span> ${(room.room_area || 0).toFixed(2)} sq units</p>
+                <p><span class="text-gray-400">Items:</span> ${room.contained_symbols.length}</p>
+                <p><span class="text-gray-400">Doors:</span> ${room.doors.length}</p>
+              </div>
+            </div>
+           
+            ${room.contained_symbols.length > 0 ? `
+              <div class="bg-white/10 rounded-xl p-4">
+                <h5 class="font-bold text-white mb-3">Room Contents:</h5>
+                <div class="flex flex-wrap -m-1">
+                  ${room.contained_symbols.map(symbol => `
+                    <div class="symbol-chip">
+                      ${getSymbolIcon(symbol.symbol_class)}
+                      <span>${symbol.symbol_class.replace('_', ' ')}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+             
+              <div class="bg-white/10 rounded-xl p-4">
+                <h5 class="font-bold text-white mb-3">Item Details:</h5>
+                <div class="space-y-2 text-sm">
+                  ${room.contained_symbols.map(symbol => `
+                    <div class="bg-white/5 rounded-lg p-3">
+                      <div class="font-medium text-white">${symbol.symbol_class.replace('_', ' ')}</div>
+                      <div class="text-gray-400 text-xs mt-1">
+                        <span>Size: ${(symbol.width || 0).toFixed(1)} × ${(symbol.height || 0).toFixed(1)}</span>
+                        <span class="ml-3">Area: ${(symbol.area || 0).toFixed(1)} sq units</span>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            ` : `
+              <div class="bg-white/10 rounded-xl p-4 text-center text-gray-400">
+                No items detected in this room
+              </div>
+            `}
+          </div>
+        `;
+      }
+     
+      function getSymbolIcon(symbolClass) {
+        const icons = {
+          'door': '<svg class="symbol-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>',
+          'bed': '<svg class="symbol-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M3 7l9-5 9 5M3 7l9 5 9-5"/></svg>',
+          'sofa': '<svg class="symbol-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>',
+          'toilet': '<svg class="symbol-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>',
+          'kitchen_sink': '<svg class="symbol-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+          'hob': '<svg class="symbol-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z"/></svg>',
+          'bathroom_sink': '<svg class="symbol-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>',
+          'furniture': '<svg class="symbol-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>'
+        };
+       
+        return icons[symbolClass] || '<svg class="symbol-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>';
+      }
+    }
+ 
+    // Chat functionality
+    function sendMessage() {
+      if (!analysisComplete) {
+        showNotification('Please run the analysis first before using the AI Assistant', 'warning');
+        return;
+      }
+    
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+ 
+      const chatHistory = document.getElementById('chatHistory');
+    
+      // Add user message
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-message bg-green-500 text-black px-4 py-3 rounded-2xl w-fit max-w-[85%] ml-auto';
+      userMsg.textContent = text;
+      chatHistory.appendChild(userMsg);
+    
+      input.value = '';
+      input.focus();
+ 
+      // Add AI typing indicator
+      const botMsg = document.createElement('div');
+      botMsg.className = 'chat-message bg-green-100 text-black text-sm px-4 py-3 rounded-2xl w-fit max-w-[85%]';
+      botMsg.innerHTML = `
+        <div class="typing-indicator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      `;
+      chatHistory.appendChild(botMsg);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+ 
+      // Send to backend
+      fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: text })
+      })
+      .then(response => {
+        botMsg.innerHTML = '';
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+      
+        function readChunk() {
+          reader.read().then(({ done, value }) => {
+            if (done) return;
+            botMsg.textContent += decoder.decode(value);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            readChunk();
+          });
+        }
+        readChunk();
+      })
+      .catch(err => {
+        botMsg.innerHTML = '<span class="text-danger">Failed to get response. Please try again.</span>';
+      });
+    }
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+      const saved = sessionStorage.getItem('uploadData');
+      if (!saved) {
+        document.body.style.opacity = '0';
+        setTimeout(() => window.location.href = '/', 500);
+        return;
+      }
+    
+      const data = JSON.parse(saved);
+    
+      // Populate data with animations
+      setTimeout(() => {
+        document.getElementById('dxfName').textContent = data.dxf_filename;
+        document.getElementById('docName').textContent = data.doc_filename;
+        document.getElementById('dxfImage').src = data.image_url;
+      
+        // Remove shimmer and add text
+        const docTextEl = document.getElementById('docText');
+        docTextEl.classList.remove('shimmer');
+        docTextEl.textContent = data.doc_text;
+      
+        showNotification('Files loaded successfully', 'success');
+      }, 800);
+      serverPaths = {
+    image_path: data.image_path,        // White version for analysis
+    display_path: data.display_path,    // Black version for display
+    analysis_path: data.analysis_path,  // White version (same as image_path)
+    dxf_path: data.dxf_path,
+    doc_path: data.doc_path
+  };
+      // Menu navigation
+      document.querySelectorAll('[id^="menu"]').forEach(item => {
+        item.addEventListener('click', function() {
+          document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+          this.classList.add('active');
+        
+          // Handle menu actions
+          const menuId = this.id;
+          if (menuId === 'menuChat') {
+            document.getElementById('chatAssistant').classList.remove('hidden');
+            document.getElementById('chatToggleBtn').classList.add('hidden');
+          }
+        });
+      });
+      // Chat functionality
+      const chatAssistant = document.getElementById('chatAssistant');
+      const chatToggleBtn = document.getElementById('chatToggleBtn');
+      const closeChatBtn = document.getElementById('closeChatBtn');
+      chatToggleBtn.addEventListener('click', () => {
+        chatAssistant.classList.remove('hidden');
+        chatToggleBtn.classList.add('hidden');
+      });
+      closeChatBtn.addEventListener('click', () => {
+        chatAssistant.classList.add('hidden');
+        chatToggleBtn.classList.remove('hidden');
+      });
+      // Analysis button
+      // In your index.html, update the analysis button click handler:
+
+document.getElementById('analyzeBtn').addEventListener('click', function() {
+  const btn = this;
+  const originalContent = btn.innerHTML;
+
+  showLoading('Running Visual Analysis');
+
+  // Update button state
+  btn.disabled = true;
+  btn.innerHTML = `
+    <div class="relative flex items-center justify-center space-x-3">
+      <div class="spinner-orbit w-6 h-6"></div>
+      <span>Analyzing...</span>
+    </div>
+  `;
+  
+  // Update status
+  document.getElementById('analysisStatusText').textContent = 'Processing';
+  document.getElementById('analysisStatus').textContent = 'Running';
+  document.getElementById('analysisStatus').className = 'ml-auto text-xs bg-warning text-black px-2 py-1 rounded-full';
+  
+  // UPDATED: Send both display and analysis paths
+  fetch('/run-analysis', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      image_path: serverPaths.image_path,      // White version for YOLO
+      display_path: serverPaths.display_path,  // Black version for showing results
+      analysis_path: serverPaths.analysis_path,// White version (redundant but clear)
+      dxf_path: serverPaths.dxf_path
+    })
+  })
+  .then(res => res.json())
+  .then(res => {
+    hideLoading();
+  
+    // Show results
+    document.getElementById('resultsSection').classList.remove('hidden');
+    document.getElementById('visualResults').classList.remove('hidden');
+    
+    // These images will show detection/segmentation on BLACK background
+    document.getElementById('detImage').src = res.detection_url;
+    document.getElementById('segImage').src = res.segmentation_url;
+  
+    // Update status
+    analysisComplete = true;
+    document.getElementById('analysisStatusText').textContent = 'Complete';
+    document.getElementById('analysisStatus').textContent = 'Complete';
+    document.getElementById('analysisStatus').className = 'ml-auto text-xs bg-success text-white px-2 py-1 rounded-full';
+  
+    // Enable chat after analysis
+    showNotification('Analysis complete! AI Assistant is now available.', 'success');
+  
+    // Scroll to results
+    document.getElementById('visualResults').scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  
+    // Reset button
+    btn.innerHTML = originalContent;
+    btn.disabled = false;
+  })
+  .catch(err => {
+    hideLoading();
+    showNotification('Analysis failed. Please try again.', 'error');
+  
+    btn.innerHTML = originalContent;
+    btn.disabled = false;
+  
+    document.getElementById('analysisStatusText').textContent = 'Failed';
+    document.getElementById('analysisStatus').textContent = 'Error';
+    document.getElementById('analysisStatus').className = 'ml-auto text-xs bg-danger text-white px-2 py-1 rounded-full';
+  });
+});
+ 
+      // Violation check button
+      // Replace your violation check button handler with this fixed version:
+
+document.getElementById('violationBtn').addEventListener('click', function() {
+  const btn = this;
+  const originalContent = btn.innerHTML;
+  const resultText = document.getElementById('violationText');
+  const resultDiv = document.getElementById('violationResult');
+  const streamingOutput = document.getElementById('streamingOutput');
+  const showTableContainer = document.getElementById('showTableContainer');
+  const formattedTable = document.getElementById('formattedTable');
+  const backToStreamBtn = document.getElementById('backToStreamBtn');
+ 
+  // Reset state
+  violationStreamData = '';
+  streamingOutput.classList.remove('hidden');
+  showTableContainer.classList.add('hidden');
+  formattedTable.classList.add('hidden');
+  backToStreamBtn.classList.add('hidden');
+ 
+  showLoading('Checking Compliance');
+ 
+  // Update button state
+  btn.disabled = true;
+  btn.innerHTML = `
+    <div class="relative flex items-center justify-center space-x-3">
+      <div class="spinner-orbit w-6 h-6"></div>
+      <span>Checking...</span>
+    </div>
+  `;
+
+  // Update status
+  document.getElementById('complianceStatus').textContent = 'Checking';
+  document.getElementById('complianceStatus').className = 'ml-auto text-xs bg-warning text-black px-2 py-1 rounded-full';
+ 
+  document.getElementById('resultsSection').classList.remove('hidden');
+  resultDiv.classList.remove('hidden');
+  resultText.textContent = '';
+
+  fetch('/check-violations', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ doc_path: serverPaths.doc_path })
+  })
+  .then(res => {
+    if (!res.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return res.body.getReader();
+  })
+  .then(reader => {
+    const decoder = new TextDecoder('utf-8');
+    let firstChunk = true;
+   
+    function read() {
+      reader.read().then(({ done, value }) => {
+        // Hide loading modal only after receiving first chunk
+        if (firstChunk) {
+          hideLoading();
+          firstChunk = false;
+        }
+       
+        if (done) {
+  console.log("Done checking compliance!");
+  complianceChecked = true;
+  
+  // *** Update the summary boxes with actual data ***
+  updateSummaryBoxes();
+  
+  // Update status
+  document.getElementById('complianceStatus').textContent = 'Checked';
+  document.getElementById('complianceStatus').className = 'ml-auto text-xs bg-success text-white px-2 py-1 rounded-full';
+  
+  resultText.innerHTML = formatStreamingText(violationStreamData);
+  // Show the buttons
+  showTableContainer.classList.remove('hidden');
+  
+  showNotification('Compliance check complete! View results below.', 'success');
+  
+  // Reset button after completion
+  btn.innerHTML = originalContent;
+  btn.disabled = false;
+  return;
+}
+
+// Append the decoded text with formatting
+const decodedText = decoder.decode(value, { stream: true });
+violationStreamData += decodedText; // Keep raw data for parsing
+
+// Format the text for display
+
+resultText.innerHTML += decodedText; // Use innerHTML instead of textContent
+resultText.classList.add('formatted-response'); // Add formatting class
+
+// Auto-scroll to show new content
+resultText.scrollTop = resultText.scrollHeight;
+       
+        // Continue reading
+        read();
+      }).catch(err => {
+        console.error('Error reading stream:', err);
+        hideLoading();
+        showNotification('Error reading compliance data', 'error');
+       
+        btn.innerHTML = originalContent;
+        btn.disabled = false;
+       
+        document.getElementById('complianceStatus').textContent = 'Error';
+        document.getElementById('complianceStatus').className = 'ml-auto text-xs bg-danger text-white px-2 py-1 rounded-full';
+      });
+    }
+   
+    read();
+   
+    // Scroll to results
+    resultDiv.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  })
+  .catch(err => {
+    console.error('Fetch error:', err);
+    hideLoading();
+    showNotification('Compliance check failed: ' + err.message, 'error');
+   
+    btn.innerHTML = originalContent;
+    btn.disabled = false;
+   
+    document.getElementById('complianceStatus').textContent = 'Error';
+    document.getElementById('complianceStatus').className = 'ml-auto text-xs bg-danger text-white px-2 py-1 rounded-full';
+  });
+});
+
+        // *** NEW FUNCTION: Update summary boxes with actual data ***
+        function updateSummaryBoxes() {
+          if (!violationStreamData) {
+            console.warn('No violation data to parse');
+            return;
+          }
+
+          // Parse the violation data
+          const violations = parseViolationData(violationStreamData);
+          
+          // Calculate actual counts
+          const totalPass = violations.filter(v => v.status === 'PASS').length;
+          const totalViolations = violations.filter(v => v.status === 'VIOLATION').length;
+          const totalUnclear = violations.filter(v => v.status === 'UNCLEAR').length;
+          const total = violations.length;
+
+          console.log('Updating summary with:', { totalPass, totalViolations, totalUnclear, total });
+
+          // Update the count displays
+          document.getElementById('passedCount').textContent = totalPass;
+          document.getElementById('violationCount').textContent = totalViolations;
+          document.getElementById('unclearCount').textContent = totalUnclear;
+
+          // Calculate percentages for progress bars
+          const passedPercent = total > 0 ? (totalPass / total) * 100 : 0;
+          const violationPercent = total > 0 ? (totalViolations / total) * 100 : 0;
+          const unclearPercent = total > 0 ? (totalUnclear / total) * 100 : 0;
+
+          // Update progress bars
+          document.getElementById('passedProgress').style.width = `${passedPercent}%`;
+          document.getElementById('violationProgress').style.width = `${violationPercent}%`;
+          document.getElementById('unclearProgress').style.width = `${unclearPercent}%`;
+
+          // Update percentage text
+          document.querySelector('#passedCard .text-green-300').textContent = `${passedPercent.toFixed(1)}% of total`;
+          document.querySelector('#violationsCard .text-red-300').textContent = `${violationPercent.toFixed(1)}% of total`;
+          document.querySelector('#unclearCard .text-yellow-300').textContent = `${unclearPercent.toFixed(1)}% of total`;
+
+          // Update compliance score
+          const score = total > 0 ? Math.round((totalPass / total) * 100) : 0;
+          document.getElementById('complianceScore').textContent = `${score}%`;
+
+          // Update the category headers in expandable sections
+          document.querySelector('#passedDetails h4').innerHTML = `
+            <span class="w-2 h-2 bg-success rounded-full mr-3 animate-pulse"></span>
+            Passed Requirements (${totalPass})
+          `;
+          document.querySelector('#violationsDetails h4').innerHTML = `
+            <span class="w-2 h-2 bg-danger rounded-full mr-3 animate-pulse"></span>
+            Violations Found (${totalViolations})
+          `;
+          document.querySelector('#unclearDetails h4').innerHTML = `
+            <span class="w-2 h-2 bg-warning rounded-full mr-3 animate-pulse"></span>
+            Unclear Requirements (${totalUnclear})
+          `;
+        }
+
+                
+                    
+                
+         
+ 
+      // View Table button
+      document.getElementById('showTableBtn').addEventListener('click', function() {
+  const streamingOutput = document.getElementById('streamingOutput');
+  const formattedTable = document.getElementById('formattedTable');
+  const tableBody = document.getElementById('violationTableBody');
+  const backToStreamBtn = document.getElementById('backToStreamBtn');
+  const showTableContainer = document.getElementById('showTableContainer');
+ 
+  // Parse the violation data and create table rows
+  const violations = parseViolationData(violationStreamData);
+ 
+  // Clear existing table rows
+  tableBody.innerHTML = '';
+ 
+  // Determine if table should be compact (more than 10 rows)
+  const isLargeTable = violations.length > 10;
+  const displayLimit = isLargeTable ? 5 : violations.length; // Show only 5 rows initially if large
+ 
+  // Populate table with parsed data (limited rows initially)
+  violations.slice(0, displayLimit).forEach((violation, index) => {
+    const row = createTableRow(violation, index);
+    tableBody.appendChild(row);
+  });
+
+  // Add expand button if table is large
+  if (isLargeTable) {
+    const expandRow = document.createElement('tr');
+    expandRow.className = 'border-t-2 border-blue-300 bg-blue-900/30';
+    expandRow.id = 'expandRow';
+    
+    expandRow.innerHTML = `
+      <td colspan="3" class="py-4 text-center">
+        <button id="expandTableBtn" class="expand-btn text-white py-2 px-6 rounded-lg font-semibold flex items-center justify-center space-x-2 mx-auto">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+          <span>Show ${violations.length - displayLimit} More Items</span>
+        </button>
+      </td>
+    `;
+    
+    tableBody.appendChild(expandRow);
+
+    // Add expand button functionality
+    document.getElementById('expandTableBtn').addEventListener('click', function() {
+      const btn = this;
+      const isExpanded = btn.dataset.expanded === 'true';
+      
+      if (!isExpanded) {
+        // Expand: Show all remaining rows
+        violations.slice(displayLimit).forEach((violation, index) => {
+          const row = createTableRow(violation, displayLimit + index);
+          tableBody.insertBefore(row, expandRow);
+        });
+        
+        btn.innerHTML = `
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+          </svg>
+          <span>Show Less</span>
+        `;
+        btn.dataset.expanded = 'true';
+        
+        // Add compact table class for scrolling
+        formattedTable.querySelector('.overflow-x-auto').classList.add('compact-table');
+      } else {
+        // Collapse: Remove extra rows
+        const allRows = Array.from(tableBody.querySelectorAll('tr'));
+        allRows.slice(displayLimit, -1).forEach(row => row.remove()); // Remove all except first 5 and expand row
+        
+        btn.innerHTML = `
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+          <span>Show ${violations.length - displayLimit} More Items</span>
+        `;
+        btn.dataset.expanded = 'false';
+        
+        // Remove compact table class
+        formattedTable.querySelector('.overflow-x-auto').classList.remove('compact-table');
+      }
+    });
+  }
+ 
+  // Add summary row at the bottom
+  const summaryRow = document.createElement('tr');
+  summaryRow.className = 'border-t-2 border-blue-300 bg-blue-900/20';
+ 
+  const totalViolations = violations.filter(v => v.status === 'VIOLATION').length;
+  const totalPass = violations.filter(v => v.status === 'PASS').length;
+  const totalUnclear = violations.filter(v => v.status === 'UNCLEAR').length;
+ 
+  tableBody.appendChild(summaryRow);
+ 
+  // Update compliance score based on results
+  const total = violations.length;
+  const score = total > 0 ? Math.round((totalPass / total) * 100) : 0;
+  document.getElementById('complianceScore').textContent = `${score}%`;
+ 
+  // Hide streaming output and buttons, show formatted table and back button
+  streamingOutput.classList.add('hidden');
+  formattedTable.classList.remove('hidden');
+  showTableContainer.classList.add('hidden');
+  backToStreamBtn.classList.remove('hidden');
+ 
+  // Smooth scroll to table
+  formattedTable.scrollIntoView({
+    behavior: 'smooth',
+    block: 'nearest'
+  });
+ 
+  // Show appropriate notification
+  if (totalViolations > 0) {
+    showNotification(`Found ${totalViolations} compliance violations. Review the table for details.`, 'warning');
+  } else if (totalPass === total) {
+    showNotification('All requirements passed! Full compliance achieved.', 'success');
+  }
+});
+
+// 3. ADD this helper function to create table rows:
+function createTableRow(violation, index) {
+  const row = document.createElement('tr');
+  row.className = 'border-b border-blue-500 animate-fade-in';
+  row.style.animationDelay = `${(index % 5) * 0.1}s`; // Stagger animation for visible rows
+ 
+  // Determine styling based on status
+  let statusClass = 'text-yellow-300';
+  let statusIcon = '⚠';
+ 
+  if (violation.status === 'PASS') {
+    statusClass = 'text-green-400';
+    statusIcon = '✔';
+  } else if (violation.status === 'VIOLATION') {
+    statusClass = 'text-red-400';
+    statusIcon = '✘';
+  } else if (violation.status === 'UNCLEAR') {
+    statusClass = 'text-yellow-300';
+    statusIcon = '⚠';
+  }
+ 
+  row.innerHTML = `
+    <td class="py-3 pr-4 font-medium">${violation.requirement}</td>
+    <td class="py-3 pr-4 ${statusClass} font-bold">${statusIcon} ${violation.status}</td>
+    <td class="py-3 text-sm">${violation.reason}</td>
+  `;
+ 
+  return row;
+}
+
+
+
+function formatStreamingText(text) {
+  return text
+    .replace(/REQUIREMENT:/g, '<span class="requirement-label">REQUIREMENT:</span>')
+    .replace(/STATUS:/g, '<span class="status-label">STATUS:</span>')
+    .replace(/REASON:/g, '<span class="reason-label">REASON:</span>');
+}
+
+
+     
+       
+     
+       
+  
+      // Add back to stream button handler
+      document.getElementById('backToStreamBtn').addEventListener('click', function() {
+        const streamingOutput = document.getElementById('streamingOutput');
+        const formattedTable = document.getElementById('formattedTable');
+        const backToStreamBtn = document.getElementById('backToStreamBtn');
+        const showTableContainer = document.getElementById('showTableContainer');
+       
+        // Show streaming output and buttons, hide table and back button
+        streamingOutput.classList.remove('hidden');
+        formattedTable.classList.add('hidden');
+        showTableContainer.classList.remove('hidden');
+        backToStreamBtn.classList.add('hidden');
+      });
+ 
+      // Chat send button
+      document.getElementById('sendBtn').addEventListener('click', sendMessage);
+     
+      // Chat input enter key
+      document.getElementById('chatInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') sendMessage();
+      });
+      // Mobile sidebar toggle
+      const sidebar = document.getElementById('sidebar');
+      const sidebarToggle = document.getElementById('sidebarToggle');
+    
+      if (window.innerWidth < 1024) {
+        sidebar.classList.add('sidebar');
+      }
+    
+      sidebarToggle?.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+      });
+ 
+      // Initialize room layout functionality
+      initializeRoomLayout();
+    });
+  </script>
+</body>
+</html>
+ 
+ 
+ 

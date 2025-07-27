@@ -1,0 +1,4 @@
+*.pt
+
+# Ignore the .env file
+.env

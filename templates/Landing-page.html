@@ -1,0 +1,364 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KSIA Services Portal</title>
+    <script src=https://cdn.tailwindcss.com></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#001f3f',
+                        'primary-hover': '#001633',
+                        'primary-light': '#e6f3ff',
+                        'accent': '#0066cc',
+                        'accent-light': '#3399ff',
+                        'accent-dark': '#004499',
+                        'success': '#10b981',
+                        'warning': '#f59e0b',
+                        'danger': '#ef4444',
+                        'dark': '#0f172a',
+                        'light': '#f8fafc'
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'fade-in': 'fadeIn 0.8s ease-out',
+                        'scale-in': 'scaleIn 0.6s ease-out',
+                        'gradient': 'gradient 8s ease infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                        'bounce-slow': 'bounce 2s infinite'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+      
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 20px #0066cc, 0 0 40px #0066cc; }
+            to { box-shadow: 0 0 30px #0066cc, 0 0 60px #0066cc, 0 0 80px #0066cc; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+/*
+        .gradient-bg {
+            background: linear-gradient(-45deg, #001f3f, #0066cc, #001f3f, #003366);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        } */
+        .gradient-bg {
+            background-color: #001f3f;
+        }
+        .gradient-mesh {
+            background-image:
+                radial-gradient(at 40% 20%, hsla(210, 100%, 16%, 1) 0px, transparent 50%),
+                radial-gradient(at 80% 0%, hsla(210, 100%, 20%, 1) 0px, transparent 50%),
+                radial-gradient(at 0% 50%, hsla(210, 100%, 25%, 1) 0px, transparent 50%),
+                radial-gradient(at 80% 50%, hsla(210, 100%, 30%, 0.8) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, hsla(210, 100%, 35%, 0.6) 0px, transparent 50%);
+        }
+        /* .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 31, 63, 0.37);
+        } */
+        .glass-card {
+    background: rgba(255, 255, 255, 0.25); /* much lighter */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+}
+
+
+
+
+
+
+        .service-card {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
+        }
+        .service-card:hover::before {
+            left: 100%;
+        }
+        .service-card:hover {
+            transform: translateY(-10px) rotateX(-10deg);
+            box-shadow: 0 25px 50px rgba(0, 31, 63, 0.4);
+        }
+        .icon-container {
+            transition: all 0.3s ease;
+        }
+        .service-card:hover .icon-container {
+            transform: scale(1.1) rotate(5deg);
+        }
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        .shimmer-button {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+        .shimmer-button:hover::after {
+            left: 100%;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen font-sans overflow-x-hidden">
+    <!-- Animated Particles Background -->
+    <!-- <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="particle w-3 h-3 bg-accent rounded-full absolute top-20 left-10 animate-float"></div>
+        <div class="particle w-2 h-2 bg-accent-light rounded-full absolute top-40 right-20 animate-float" style="animation-delay: 1s;"></div>
+        <div class="particle w-4 h-4 bg-primary-light rounded-full absolute bottom-20 left-1/3 animate-pulse-slow"></div>
+        <div class="particle w-2 h-2 bg-accent rounded-full absolute bottom-40 right-1/3 animate-float" style="animation-delay: 2s;"></div>
+        <div class="particle w-3 h-3 bg-accent-dark rounded-full absolute top-1/2 left-20 animate-float" style="animation-delay: 3s;"></div>
+        <div class="particle w-5 h-5 bg-primary-light rounded-full absolute top-1/3 right-1/4 animate-pulse-slow" style="animation-delay: 1.5s;"></div>
+    </div> -->
+    <!-- Header -->
+    <!-- <header class="relative z-10 animate-slide-up">
+        <div class="container mx-auto px-6 py-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-accent rounded-xl flex items-center justify-center animate-pulse-slow">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-white">KSIA Services</h1>
+                        <p class="text-sm text-blue-200">Intelligent Business Solutions</p>
+                    </div>
+                </div>
+                <img src="/static/vectara-ai-removebg-preview.png" alt="Vectara Logo" class="h-[270px] opacity-90" />
+            </div>
+        </div>
+    </header> -->
+ 
+    <header class="relative z-10 animate-slide-up">
+        <div class="container mx-auto px-6 py-8">
+          <div class="flex items-center justify-between">
+          
+            <!-- Left section: KSIA Logo + Text below it -->
+            <div class="flex flex-col items-center">
+              <!-- KSIA Logo -->
+              <!-- <img src="/static/oavduc7W_400x400-removebg-preview.png" alt="KSIA logo" class="h-[270px] w-auto" /> -->
+              <img src="/static/Image_08-01-1447_AH_at_12.26_PM-removebg-preview.png" alt="KSIA logo" class="h-[200px] w-auto" style="margin-top: -10px;" />
+     
+              <!-- Text below the image, moved up -->
+              <!-- <p class="text-sm text-blue-200" style="margin-top: -110px;">Intelligent Business Solutions</p> -->
+            </div>
+    
+            <!-- Right: Vectara Logo -->
+            <img src="/static/vectara-ai-removebg-preview.png" alt="Vectara Logo" class="h-[200px] opacity-90" />
+          </div>
+        </div>
+      </header>
+    
+      
+ 
+    <!-- Main Content -->
+    <main class="relative z-10 container mx-auto px-6 py-16">
+        <!-- Title Section -->
+        <!-- <div class="text-center mb-16 animate-fade-in">
+            <h2 class="text-5xl md:text-6xl font-black text-white mb-6">
+                Choose Your <span class="text-accent-light">Service</span>
+            </h2>
+            <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+                Select from our suite of AI-powered solutions designed to streamline your business operations
+            </p>
+        </div> -->
+ 
+        <div class="text-center mb-16 animate-fade-in">
+            <h2 class="text-5xl md:text-6xl font-black text-white mb-6">
+                Choose Your <span class="text-white">Service</span>
+            </h2>
+            <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+                Select from our suite of AI-powered solutions designed to streamline your business operations
+            </p>
+        </div>
+      
+
+
+
+        <!-- Service Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <!-- Architect Detection Card -->
+            <div class="service-card glass-card rounded-3xl p-8 animate-scale-in" style="animation-delay: 0.1s;">
+                <div class="flex flex-col h-full">
+                    <div class="icon-container w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-800 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3 text-center">Architect Detection</h3>
+                    <p class="text-gray-300 text-center mb-8 flex-grow">
+                        Advanced floor plan analysis and compliance checking for architectural layouts
+                    </p>
+                    <a href="/upload-page" class="shimmer-button w-full bg-gradient-to-r from-purple-500 to-purple-800 text-white py-4 px-6 rounded-xl font-semibold text-center block transition-all duration-300 hover:shadow-lg transform hover:scale-105">
+                        Launch Application
+                    </a>
+                </div>
+            </div>
+ 
+            <!-- HR Chatbot Card -->
+            <div class="service-card glass-card rounded-3xl p-8 animate-scale-in" style="animation-delay: 0.2s;">
+                <div class="flex flex-col h-full">
+                    <div class="icon-container w-20 h-20 bg-gradient-to-br from-success to-green-600 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3 text-center">HR Chatbot</h3>
+                    <p class="text-gray-300 text-center mb-8 flex-grow">
+                        Intelligent HR assistant for employee queries and workforce management
+                    </p>
+                    <a href="/hr-chatbot.html" class="shimmer-button w-full bg-gradient-to-r from-success to-green-600 text-white py-4 px-6 rounded-xl font-semibold text-center block transition-all duration-300 hover:shadow-lg transform hover:scale-105">
+                        Open HR Assistant
+                    </a>
+                </div>
+            </div>
+ 
+            <!-- Legal Chatbot Card -->
+            <div class="service-card glass-card rounded-3xl p-8 animate-scale-in" style="animation-delay: 0.3s;">
+                <div class="flex flex-col h-full">
+                    <div class="icon-container w-20 h-20 bg-gradient-to-br from-warning to-orange-600 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3 text-center">Legal Chatbot</h3>
+                    <p class="text-gray-300 text-center mb-8 flex-grow">
+                        AI-powered legal advisor for compliance and regulatory guidance
+                    </p>
+                    <a href="/legal-chatbot.html" class="shimmer-button w-full bg-gradient-to-r from-warning to-orange-600 text-white py-4 px-6 rounded-xl font-semibold text-center block transition-all duration-300 hover:shadow-lg transform hover:scale-105">
+                        Access Legal Assistant
+                    </a>
+                </div>
+            </div>
+ 
+            <!-- Finance Chatbot Card -->
+            <div class="service-card glass-card rounded-3xl p-8 animate-scale-in" style="animation-delay: 0.4s;">
+                <div class="flex flex-col h-full">
+                    <div class="icon-container w-20 h-20 bg-gradient-to-br from-danger to-red-600 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3 text-center">Finance Chatbot</h3>
+                    <p class="text-gray-300 text-center mb-8 flex-grow">
+                        Smart financial assistant for budgeting, reporting, and financial insights
+                    </p>
+                    <a href="/finance-chatbot.html" class="shimmer-button w-full bg-gradient-to-r from-danger to-red-600 text-white py-4 px-6 rounded-xl font-semibold text-center block transition-all duration-300 hover:shadow-lg transform hover:scale-105">
+                        Launch Finance Assistant
+                    </a>
+                </div>
+            </div>
+ 
+            <!-- IT Support Card -->
+            <div class="service-card glass-card rounded-3xl p-8 animate-scale-in" style="animation-delay: 0.5s;">
+                <div class="flex flex-col h-full">
+                    <div class="icon-container w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-800 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3 text-center">Curriculum Support</h3>
+                    <p class="text-gray-300 text-center mb-8 flex-grow">
+                        24/7 curriculum guidance and academic support to help you stay on track with your studies.
+                    </p>
+                    <a href="/curriculum" class="shimmer-button w-full bg-gradient-to-r from-blue-500 to-blue-800 text-white py-4 px-6 rounded-xl font-semibold text-center block transition-all duration-300 hover:shadow-lg transform hover:scale-105">
+                        Get Curriculum Support
+                    </a>
+                </div>
+            </div>
+ 
+      
+            <!-- NEW: Reports Card -->
+            <div class="service-card glass-card rounded-3xl p-8 animate-scale-in" style="animation-delay: 0.7s;">
+                <div class="flex flex-col h-full">
+                    <div class="icon-container w-20 h-20 bg-gradient-to-br from-indigo-500 to-indigo-800 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3 text-center">Reports</h3>
+                    <p class="text-gray-300 text-center mb-8 flex-grow">
+                        Comprehensive business analytics and automated reporting dashboard
+                    </p>
+                    <a href="/report" class="shimmer-button w-full bg-gradient-to-r from-indigo-500 to-indigo-800 text-white py-4 px-6 rounded-xl font-semibold text-center block transition-all duration-300 hover:shadow-lg transform hover:scale-105">
+                        View Reports
+                    </a>
+                </div>
+            </div>
+        </div>
+ 
+        <!-- Footer Info -->
+        <div class="text-center mt-16 animate-fade-in" style="animation-delay: 0.8s;">
+            <p class="text-blue-200 text-sm">
+                Powered by advanced AI technology • Available 24/7 • Secure & Compliant
+            </p>
+        </div>
+    </main>
+</body>
+</html>
+ 
+ 

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KSIA Reports Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#1e3a8a',
+                        'primary-dark': '#1e40af',
+                        'accent': '#f59e0b',
+                        'accent-dark': '#d97706',
+                        'success': '#10b981',
+                        'warning': '#f59e0b',
+                        'danger': '#ef4444'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+       
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+ 
+        .chat-message {
+            animation: slideUp 0.3s ease-out;
+        }
+ 
+        .typing-indicator {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #f59e0b;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+ 
+        .typing-indicator:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator:nth-child(2) { animation-delay: -0.16s; }
+ 
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+ 
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+ 
+        .upload-area {
+            border: 2px dashed #4b5563;
+            transition: all 0.3s ease;
+        }
+ 
+        .upload-area:hover {
+            border-color: #f59e0b;
+            background-color: rgba(245, 158, 11, 0.05);
+        }
+ 
+        .upload-area.dragover {
+            border-color: #f59e0b;
+            background-color: rgba(245, 158, 11, 0.1);
+        }
+ 
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+ 
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 min-h-screen text-white">
+    <!-- Header -->
+    <div class="bg-slate-800 px-6 py-4 flex items-center justify-between">
+        <button onclick="window.history.back()" class="flex items-center text-gray-300 hover:text-white transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Services
+        </button>
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-lg font-semibold">Reports Assistant</h1>
+                <p class="text-sm text-gray-400">Document Analysis & Report Generation</p>
+            </div>
+        </div>
+    </div>
+ 
+    <!-- Hero Section -->
+    <div class="max-w-7xl mx-auto p-6">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 mb-8 relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-3xl font-bold mb-2">Reports Virtual Assistant</h2>
+                        <p class="text-blue-100 text-lg">Upload documents and get AI-powered analysis and insights</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                        <span class="text-sm font-medium">Available</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+ 
+        <!-- Warning Banner -->
+        <div class="bg-yellow-600/20 border border-yellow-600/30 rounded-lg p-4 mb-6 flex items-start space-x-3">
+            <svg class="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+            </svg>
+            <p class="text-yellow-200 text-sm">This AI assistant provides general document analysis only and does not constitute professional advice. For specific business decisions, please consult with qualified professionals.</p>
+        </div>
+ 
+        <!-- Main Content - Side by Side Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Sidebar - Upload Section -->
+            <div class="lg:col-span-1">
+                <div class="bg-slate-800 rounded-xl p-6 h-[600px] sticky top-6">
+                    <h3 class="text-lg font-semibold mb-6 text-center">Upload Document</h3>
+                   
+                    <!-- Template Upload Toggle -->
+                    <div class="bg-slate-700/50 rounded-lg p-3 mb-4">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" id="templateToggle" class="mr-3 w-4 h-4 text-amber-600 bg-slate-700 border-slate-600 rounded focus:ring-amber-500">
+                            <span class="text-sm font-medium text-gray-300">Upload as Template</span>
+                        </label>
+                        <p class="text-xs text-gray-500 mt-1 ml-7">Enable this to add document to templates library</p>
+                    </div>
+                   
+                    <!-- Clean Upload Area -->
+                    <div id="uploadArea" class="upload-area rounded-xl cursor-pointer bg-slate-700 flex flex-col justify-center items-center h-48 mb-6">
+                        <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                        </svg>
+                        <p class="text-gray-300 text-base font-medium mb-1">Drop files here</p>
+                        <p class="text-gray-400 text-sm">or click to browse</p>
+                        <p class="text-gray-500 text-xs mt-2">PDF, DOCX, TXT • Max 10MB</p>
+                    </div>
+                   
+                    <input type="file" id="fileInput" accept=".pdf,.docx,.txt" style="display: none;">
+                   
+                    <!-- File Info Display -->
+                    <div id="fileInfo" class="hidden mb-6">
+                        <div class="bg-green-600/20 border border-green-600/30 rounded-lg p-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <p id="fileName" class="text-white font-medium text-sm"></p>
+                                    <p id="fileSize" class="text-green-200 text-xs"></p>
+                                </div>
+                                <button onclick="removeFile()" class="text-red-400 hover:text-red-300 p-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <!-- Templates Info -->
+                    <div class="bg-slate-700/50 rounded-lg p-4">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-3">📋 Available Templates</h4>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-3">
+                            I have access to pre-loaded Arabic document templates for various report types.
+                            You can also upload your own documents for analysis.
+                        </p>
+                        <button onclick="refreshTemplates()" class="w-full bg-slate-600 hover:bg-slate-500 text-white text-xs py-2 rounded-lg transition-colors">
+                            Refresh Templates List
+                        </button>
+                    </div>
+                </div>
+            </div>
+ 
+            <!-- Right Side - Chat Section -->
+            <div class="lg:col-span-2">
+                <div class="bg-slate-800 rounded-xl overflow-hidden h-[600px] flex flex-col">
+                    <!-- Chat Messages -->
+                    <div id="chatContainer" class="flex-1 overflow-y-auto scrollbar-hide p-6">
+                        <div id="chatMessages" class="space-y-4">
+                            <div class="chat-message">
+                                <div class="flex items-start space-x-3">
+                                    <div class="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="bg-slate-700 rounded-2xl p-4 max-w-md text-right" dir="rtl">
+                                        <p class="text-gray-200">
+                                            أنا مجرد روبوت يمكنني مساعدتك في إنشاء تقرير مثل تقرير إجازة أو غيره، فقط أخبرني بما تحتاج وسأقوم بتعبئته لك.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <!-- Export Button Area -->
+                    <div id="exportArea" class="hidden px-6 py-3 border-t border-slate-700 bg-slate-700/30">
+                        <button onclick="exportToPDF()" class="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white py-2 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <span class="font-medium">Export as Word Document</span>
+                        </button>
+                    </div>
+ 
+                    <!-- Popular Topics -->
+                    <div class="px-6 py-4 border-t border-slate-700">
+                        <p class="text-gray-400 text-sm mb-3">Popular Topics:</p>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="sendQuickQuestion('أريد تقرير إجازة')" class="px-3 py-1 bg-slate-700 text-gray-300 rounded-lg text-xs hover:bg-slate-600 transition-colors">
+                                تقرير إجازة
+                            </button>
+                            <button onclick="sendQuickQuestion('Show available templates')" class="px-3 py-1 bg-slate-700 text-gray-300 rounded-lg text-xs hover:bg-slate-600 transition-colors">
+                                Available Templates
+                            </button>
+                            <button onclick="sendQuickQuestion('Create business report')" class="px-3 py-1 bg-slate-700 text-gray-300 rounded-lg text-xs hover:bg-slate-600 transition-colors">
+                                Business Report
+                            </button>
+                            <button onclick="sendQuickQuestion('Help me format document')" class="px-3 py-1 bg-slate-700 text-gray-300 rounded-lg text-xs hover:bg-slate-600 transition-colors">
+                                Format Document
+                            </button>
+                        </div>
+                    </div>
+ 
+                    <!-- Input Area -->
+                    <div class="p-6 border-t border-slate-700">
+                        <div class="flex items-center space-x-4">
+                            <input
+                                type="text"
+                                id="messageInput"
+                                placeholder="Ask your question..."
+                                class="flex-1 bg-slate-700 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                                onkeypress="handleKeyPress(event)"
+                            >
+                            <button
+                                onclick="sendMessage()"
+                                id="sendBtn"
+                                class="bg-amber-600 hover:bg-amber-700 text-white p-3 rounded-xl transition-all duration-300 hover:shadow-lg flex items-center justify-center"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                </svg>
+                                <span class="ml-1 text-sm font-medium">Send</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <script>
+        let uploadedFileName = '';
+        let lastAIResponse = '';
+ 
+        // File upload handling
+        document.getElementById('uploadArea').addEventListener('click', () => {
+            document.getElementById('fileInput').click();
+        });
+ 
+        document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+ 
+        // Drag and drop
+        const uploadArea = document.getElementById('uploadArea');
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+ 
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+ 
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileSelect({ target: { files: files } });
+            }
+        });
+ 
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 10 * 1024 * 1024) {
+                    addMessage('system', '❌ File too large. Please upload files smaller than 10MB.');
+                    return;
+                }
+ 
+                uploadedFileName = file.name;
+               
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('fileSize').textContent = formatFileSize(file.size);
+                document.getElementById('fileInfo').classList.remove('hidden');
+               
+                uploadFile(file);
+            }
+        }
+ 
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+ 
+        function removeFile() {
+            uploadedFileName = '';
+            document.getElementById('fileInfo').classList.add('hidden');
+            document.getElementById('fileInput').value = '';
+            addMessage('system', '📤 File removed.');
+        }
+ 
+        function uploadFile(file) {
+            const formData = new FormData();
+            const isTemplate = document.getElementById('templateToggle').checked;
+            
+            formData.append('report', file);
+            formData.append('is_template', isTemplate);
+ 
+            addMessage('system', `📤 Uploading ${file.name}${isTemplate ? ' as template' : ''}...`);
+           
+            fetch('/api/reports/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    addMessage('system', `❌ Upload failed: ${data.error}`);
+                } else {
+                    if (isTemplate) {
+                        addMessage('system', `✅ Template uploaded successfully! File "${data.filename}" has been added to the templates library.`);
+                        document.getElementById('templateToggle').checked = false;
+                    } else {
+                        addMessage('system', `✅ File uploaded successfully! Document contains ${data.word_count} words.`);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Upload error:', error);
+                addMessage('system', '❌ Upload failed. Please try again.');
+            });
+        }
+ 
+        function sendQuickQuestion(question) {
+            document.getElementById('messageInput').value = question;
+            sendMessage();
+        }
+ 
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+           
+            if (message) {
+                addMessage('user', message);
+                input.value = '';
+                showTypingIndicator();
+               
+                fetch('/api/reports/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: message,
+                        filename: uploadedFileName
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    hideTypingIndicator();
+                    if (data.response) {
+                        lastAIResponse = data.response;
+                        addMessage('ai', data.response);
+                        // Show export button if we have a substantive response
+                        if (data.response.length > 100) {
+                            document.getElementById('exportArea').classList.remove('hidden');
+                        }
+                    } else {
+                        addMessage('ai', data.message || 'Response received successfully.');
+                    }
+                })
+                .catch(error => {
+                    hideTypingIndicator();
+                    console.error('Message error:', error);
+                    addMessage('ai', '❌ Error processing your request. Please try again.');
+                });
+            }
+        }
+ 
+        function addMessage(type, content) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message';
+ 
+            if (type === 'user') {
+                messageDiv.innerHTML = `
+                    <div class="flex items-start space-x-3 justify-end">
+                        <div class="bg-amber-600 rounded-2xl p-4 max-w-md">
+                            <p class="text-white">${content}</p>
+                        </div>
+                        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'system') {
+                messageDiv.innerHTML = `
+                    <div class="flex justify-center">
+                        <div class="bg-blue-600/20 border border-blue-600/30 rounded-xl p-3 max-w-md">
+                            <p class="text-blue-200 text-sm text-center">${content}</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <div class="bg-slate-700 rounded-2xl p-4 max-w-md">
+                            <p class="text-gray-200 whitespace-pre-line">${content}</p>
+                        </div>
+                    </div>
+                `;
+            }
+ 
+            messagesContainer.appendChild(messageDiv);
+            document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
+        }
+ 
+        function showTypingIndicator() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-message typing-message';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <div class="bg-slate-700 rounded-2xl p-4">
+                        <div class="flex space-x-1">
+                            <div class="typing-indicator"></div>
+                            <div class="typing-indicator"></div>
+                            <div class="typing-indicator"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            messagesContainer.appendChild(typingDiv);
+            document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
+        }
+ 
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+ 
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+ 
+        function refreshTemplates() {
+            addMessage('system', '🔄 Refreshing templates list...');
+            fetch('/api/reports/refresh-templates', {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.templates && data.templates.length > 0) {
+                    addMessage('system', `✅ Templates refreshed! Available templates:\n${data.templates.join('\n')}`);
+                } else {
+                    addMessage('system', '📋 No templates found in the templates directory.');
+                }
+            })
+            .catch(error => {
+                console.error('Refresh error:', error);
+                addMessage('system', '❌ Failed to refresh templates.');
+            });
+        }
+ 
+        function exportToPDF() {
+            if (!lastAIResponse) {
+                addMessage('system', '❌ No content to export. Please generate a report first.');
+                return;
+            }
+ 
+            addMessage('system', '📄 Generating Word document...');
+ 
+            fetch('/api/reports/export-pdf', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    content: lastAIResponse,
+                    filename: uploadedFileName || 'report'
+                })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('PDF generation failed');
+                return response.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${uploadedFileName.replace(/\.[^/.]+$/, '') || 'report'}_${new Date().toISOString().split('T')[0]}.docx`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                addMessage('system', '✅ Word document exported successfully!');
+            })
+            .catch(error => {
+                console.error('Export error:', error);
+                addMessage('system', '❌ Failed to export Word document. Please try again.');
+            });
+        }
+    </script>
+</body>
+</html>
