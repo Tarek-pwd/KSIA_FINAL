@@ -450,6 +450,13 @@ def cur():
 def report():
     return render_template('reports.html')
 
+
+@app.route('/avatar-chatbot')
+def avatar():
+    return render_template('avatar-chatbot.html')
+
+
+
 # ========== REPORTS FUNCTIONALITY ==========
 
 @app.route('/api/reports/upload', methods=['POST'])
