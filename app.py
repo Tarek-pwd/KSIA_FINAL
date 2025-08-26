@@ -393,6 +393,20 @@ def extract_text(filepath, flg):
         return f"⚠️ Error reading file: {e}"
 
 # === Routes ===
+
+
+
+# Legal Chatbot page
+@app.route('/legal-chatbot.html')
+def legal_chatbot():
+    return render_template('legal-chatbot.html')
+
+
+
+@app.route('/signature-detection.html')
+def signature_detection():
+    return render_template('signature-detection.html')
+
 @app.route('/')
 def landing_page():
     return render_template('landing-page.html')
@@ -416,10 +430,10 @@ def results_page():
 def hr_chatbot():
     return render_template('hr-chatbot.html')
 
-# Legal Chatbot page
-@app.route('/legal-chatbot.html')
-def legal_chatbot():
-    return render_template('legal-chatbot.html')
+# # Legal Chatbot page
+# @app.route('/legal-chatbot.html')
+# def legal_chatbot():
+#     return render_template('legal-chatbot.html')
 
 # Finance Chatbot page
 @app.route('/finance-chatbot.html')

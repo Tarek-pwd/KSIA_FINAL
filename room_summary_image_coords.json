@@ -1,128 +1,90 @@
 {
   "room_1": {
-    "room_class": "Room",
-    "room_type": "bathroom",
+    "room_class": "Room Segmentation - v11 2024-09-22 12-14pm",
+    "room_type": "bedroom",
     "room_bbox": [
-      651,
-      102,
-      1175,
-      402
-    ],
-    "contained_symbols": [
-      {
-        "symbol_class": "bathroom_sink",
-        "bbox": [
-          667,
-          103,
-          787,
-          198
-        ],
-        "center": [
-          727,
-          150
-        ]
-      },
-      {
-        "symbol_class": "toilet",
-        "bbox": [
-          909,
-          98,
-          1031,
-          246
-        ],
-        "center": [
-          970,
-          172
-        ]
-      }
-    ],
-    "doors": []
-  },
-  "room_2": {
-    "room_class": "Room",
-    "room_type": "unknown",
-    "room_bbox": [
-      135,
-      623,
-      270,
-      944
-    ],
-    "contained_symbols": [],
-    "doors": []
-  },
-  "room_3": {
-    "room_class": "Room",
-    "room_type": "garage",
-    "room_bbox": [
-      129,
-      835,
-      1182,
-      1286
+      398,
+      985,
+      936,
+      1364
     ],
     "contained_symbols": [
       {
         "symbol_class": "sofa",
         "bbox": [
-          413,
-          879,
-          749,
-          945
+          802,
+          1214,
+          938,
+          1350
         ],
         "center": [
-          581,
-          912
+          870,
+          1282
         ]
       },
       {
-        "symbol_class": "car",
+        "symbol_class": "furniture",
         "bbox": [
-          303,
-          1061,
-          549,
-          1168
+          773,
+          1307,
+          845,
+          1369
         ],
         "center": [
-          426,
-          1114
+          809,
+          1338
         ]
       },
-      {
-        "symbol_class": "table",
-        "bbox": [
-          756,
-          889,
-          818,
-          943
-        ],
-        "center": [
-          787,
-          916
-        ]
-      }
-    ],
-    "doors": []
-  },
-  "room_4": {
-    "room_class": "Room",
-    "room_type": "unknown",
-    "room_bbox": [
-      838,
-      643,
-      1179,
-      945
-    ],
-    "contained_symbols": [
       {
         "symbol_class": "door",
         "bbox": [
-          1081,
-          762,
-          1169,
-          869
+          820,
+          967,
+          954,
+          1095
         ],
         "center": [
-          1125,
-          815
+          887,
+          1031
+        ]
+      },
+      {
+        "symbol_class": "bed",
+        "bbox": [
+          391,
+          1140,
+          617,
+          1301
+        ],
+        "center": [
+          504,
+          1220
+        ]
+      },
+      {
+        "symbol_class": "door",
+        "bbox": [
+          440,
+          1140,
+          479,
+          1180
+        ],
+        "center": [
+          459,
+          1160
+        ]
+      },
+      {
+        "symbol_class": "furniture",
+        "bbox": [
+          400,
+          976,
+          830,
+          1054
+        ],
+        "center": [
+          615,
+          1015
         ]
       }
     ],
@@ -130,65 +92,65 @@
       {
         "symbol_class": "door",
         "bbox": [
-          1081,
-          762,
-          1169,
-          869
+          820,
+          967,
+          954,
+          1095
         ],
         "center": [
-          1125,
-          815
+          887,
+          1031
+        ]
+      },
+      {
+        "symbol_class": "door",
+        "bbox": [
+          440,
+          1140,
+          479,
+          1180
+        ],
+        "center": [
+          459,
+          1160
         ]
       }
     ]
   },
-  "room_5": {
-    "room_class": "Room",
-    "room_type": "kitchen",
+  "room_2": {
+    "room_class": "Room Segmentation - v11 2024-09-22 12-14pm",
+    "room_type": "unknown",
     "room_bbox": [
-      1195,
-      786,
-      1621,
-      1266
+      531,
+      289,
+      1147,
+      582
     ],
     "contained_symbols": [
       {
-        "symbol_class": "hob",
-        "bbox": [
-          1310,
-          823,
-          1452,
-          982
-        ],
-        "center": [
-          1381,
-          902
-        ]
-      },
-      {
         "symbol_class": "door",
         "bbox": [
-          1187,
-          980,
-          1304,
-          1081
+          998,
+          283,
+          1160,
+          427
         ],
         "center": [
-          1245,
-          1030
+          1079,
+          355
         ]
       },
       {
-        "symbol_class": "kitchen_sink",
+        "symbol_class": "stairs",
         "bbox": [
-          1474,
-          1054,
-          1584,
-          1249
+          649,
+          291,
+          997,
+          437
         ],
         "center": [
-          1529,
-          1151
+          823,
+          364
         ]
       }
     ],
@@ -196,78 +158,170 @@
       {
         "symbol_class": "door",
         "bbox": [
-          1187,
-          980,
-          1304,
-          1081
+          998,
+          283,
+          1160,
+          427
         ],
         "center": [
-          1245,
-          1030
+          1079,
+          355
+        ]
+      }
+    ]
+  },
+  "room_3": {
+    "room_class": "Room Segmentation - v11 2024-09-22 12-14pm",
+    "room_type": "unknown",
+    "room_bbox": [
+      542,
+      73,
+      869,
+      267
+    ],
+    "contained_symbols": [
+      {
+        "symbol_class": "door",
+        "bbox": [
+          756,
+          87,
+          897,
+          216
+        ],
+        "center": [
+          826,
+          151
+        ]
+      }
+    ],
+    "doors": [
+      {
+        "symbol_class": "door",
+        "bbox": [
+          756,
+          87,
+          897,
+          216
+        ],
+        "center": [
+          826,
+          151
+        ]
+      }
+    ]
+  },
+  "room_4": {
+    "room_class": "Room Segmentation - v11 2024-09-22 12-14pm",
+    "room_type": "unknown",
+    "room_bbox": [
+      886,
+      66,
+      1159,
+      272
+    ],
+    "contained_symbols": [],
+    "doors": []
+  },
+  "room_5": {
+    "room_class": "Room Segmentation - v11 2024-09-22 12-14pm",
+    "room_type": "bathroom",
+    "room_bbox": [
+      533,
+      477,
+      1155,
+      962
+    ],
+    "contained_symbols": [
+      {
+        "symbol_class": "door",
+        "bbox": [
+          1007,
+          583,
+          1158,
+          740
+        ],
+        "center": [
+          1082,
+          661
+        ]
+      },
+      {
+        "symbol_class": "door",
+        "bbox": [
+          516,
+          641,
+          648,
+          766
+        ],
+        "center": [
+          582,
+          703
+        ]
+      },
+      {
+        "symbol_class": "bathroom_sink",
+        "bbox": [
+          699,
+          795,
+          778,
+          883
+        ],
+        "center": [
+          738,
+          839
+        ]
+      }
+    ],
+    "doors": [
+      {
+        "symbol_class": "door",
+        "bbox": [
+          1007,
+          583,
+          1158,
+          740
+        ],
+        "center": [
+          1082,
+          661
+        ]
+      },
+      {
+        "symbol_class": "door",
+        "bbox": [
+          516,
+          641,
+          648,
+          766
+        ],
+        "center": [
+          582,
+          703
         ]
       }
     ]
   },
   "room_6": {
-    "room_class": "Room",
-    "room_type": "bedroom",
+    "room_class": "Room Segmentation - v11 2024-09-22 12-14pm",
+    "room_type": "unknown",
     "room_bbox": [
-      843,
-      404,
-      1631,
-      789
+      533,
+      478,
+      940,
+      766
     ],
     "contained_symbols": [
       {
         "symbol_class": "door",
         "bbox": [
-          1416,
-          723,
-          1475,
-          784
+          516,
+          641,
+          648,
+          766
         ],
         "center": [
-          1445,
-          753
-        ]
-      },
-      {
-        "symbol_class": "door",
-        "bbox": [
-          1562,
-          496,
-          1629,
-          552
-        ],
-        "center": [
-          1595,
-          524
-        ]
-      },
-      {
-        "symbol_class": "bed",
-        "bbox": [
-          1329,
-          490,
-          1461,
-          635
-        ],
-        "center": [
-          1395,
-          562
-        ]
-      },
-      {
-        "symbol_class": "bed",
-        "bbox": [
-          954,
-          436,
-          1088,
-          597
-        ],
-        "center": [
-          1021,
-          516
+          582,
+          703
         ]
       }
     ],
@@ -275,143 +329,39 @@
       {
         "symbol_class": "door",
         "bbox": [
-          1416,
-          723,
-          1475,
-          784
+          516,
+          641,
+          648,
+          766
         ],
         "center": [
-          1445,
-          753
-        ]
-      },
-      {
-        "symbol_class": "door",
-        "bbox": [
-          1562,
-          496,
-          1629,
-          552
-        ],
-        "center": [
-          1595,
-          524
+          582,
+          703
         ]
       }
     ]
   },
   "room_7": {
-    "room_class": "Room",
-    "room_type": "bathroom",
+    "room_class": "Room Segmentation - v11 2024-09-22 12-14pm",
+    "room_type": "unknown",
     "room_bbox": [
-      107,
-      96,
-      836,
-      936
+      780,
+      554,
+      1155,
+      963
     ],
     "contained_symbols": [
       {
-        "symbol_class": "sofa",
-        "bbox": [
-          300,
-          656,
-          400,
-          942
-        ],
-        "center": [
-          350,
-          799
-        ]
-      },
-      {
-        "symbol_class": "stairs",
-        "bbox": [
-          785,
-          406,
-          846,
-          563
-        ],
-        "center": [
-          815,
-          484
-        ]
-      },
-      {
-        "symbol_class": "sofa",
-        "bbox": [
-          413,
-          879,
-          749,
-          945
-        ],
-        "center": [
-          581,
-          912
-        ]
-      },
-      {
         "symbol_class": "door",
         "bbox": [
-          103,
-          449,
-          223,
-          566
+          1007,
+          583,
+          1158,
+          740
         ],
         "center": [
-          163,
-          507
-        ]
-      },
-      {
-        "symbol_class": "dining_table",
-        "bbox": [
-          127,
-          195,
-          532,
-          395
-        ],
-        "center": [
-          329,
-          295
-        ]
-      },
-      {
-        "symbol_class": "bathroom_sink",
-        "bbox": [
-          667,
-          103,
-          787,
-          198
-        ],
-        "center": [
-          727,
-          150
-        ]
-      },
-      {
-        "symbol_class": "door",
-        "bbox": [
-          509,
-          419,
-          654,
-          576
-        ],
-        "center": [
-          581,
-          497
-        ]
-      },
-      {
-        "symbol_class": "table",
-        "bbox": [
-          756,
-          889,
-          818,
-          943
-        ],
-        "center": [
-          787,
-          916
+          1082,
+          661
         ]
       }
     ],
@@ -419,130 +369,130 @@
       {
         "symbol_class": "door",
         "bbox": [
-          103,
-          449,
-          223,
-          566
+          1007,
+          583,
+          1158,
+          740
         ],
         "center": [
-          163,
-          507
-        ]
-      },
-      {
-        "symbol_class": "door",
-        "bbox": [
-          509,
-          419,
-          654,
-          576
-        ],
-        "center": [
-          581,
-          497
+          1082,
+          661
         ]
       }
     ]
   },
   "room_8": {
-    "room_class": "Room",
-    "room_type": "living_room",
+    "room_class": "Room Segmentation - v11 2024-09-22 12-14pm",
+    "room_type": "kitchen",
     "room_bbox": [
-      294,
-      580,
-      827,
-      938
+      31,
+      15,
+      778,
+      987
     ],
     "contained_symbols": [
       {
-        "symbol_class": "sofa",
+        "symbol_class": "kitchen_sink",
         "bbox": [
-          300,
-          656,
-          400,
-          942
+          246,
+          88,
+          378,
+          157
         ],
         "center": [
-          350,
-          799
+          312,
+          122
         ]
       },
       {
-        "symbol_class": "sofa",
+        "symbol_class": "hob",
         "bbox": [
-          413,
-          879,
-          749,
-          945
+          118,
+          302,
+          190,
+          433
         ],
         "center": [
-          581,
-          912
-        ]
-      },
-      {
-        "symbol_class": "table",
-        "bbox": [
-          756,
-          889,
-          818,
-          943
-        ],
-        "center": [
-          787,
-          916
-        ]
-      }
-    ],
-    "doors": []
-  },
-  "room_9": {
-    "room_class": "Room",
-    "room_type": "dining_room--reception",
-    "room_bbox": [
-      115,
-      115,
-      648,
-      628
-    ],
-    "contained_symbols": [
-      {
-        "symbol_class": "door",
-        "bbox": [
-          103,
-          449,
-          223,
-          566
-        ],
-        "center": [
-          163,
-          507
+          154,
+          367
         ]
       },
       {
         "symbol_class": "dining_table",
         "bbox": [
-          127,
-          195,
-          532,
-          395
+          100,
+          519,
+          467,
+          700
         ],
         "center": [
-          329,
-          295
+          283,
+          609
         ]
       },
       {
         "symbol_class": "door",
         "bbox": [
-          509,
-          419,
-          654,
-          576
+          47,
+          887,
+          122,
+          956
         ],
         "center": [
-          581,
-          497
+          84,
+          921
+        ]
+      },
+      {
+        "symbol_class": "bathroom_sink",
+        "bbox": [
+          699,
+          795,
+          778,
+          883
+        ],
+        "center": [
+          738,
+          839
+        ]
+      },
+      {
+        "symbol_class": "toilet",
+        "bbox": [
+          426,
+          797,
+          551,
+          942
+        ],
+        "center": [
+          488,
+          869
+        ]
+      },
+      {
+        "symbol_class": "door",
+        "bbox": [
+          52,
+          947,
+          146,
+          1002
+        ],
+        "center": [
+          99,
+          974
+        ]
+      },
+      {
+        "symbol_class": "kitchen_sink",
+        "bbox": [
+          246,
+          85,
+          422,
+          160
+        ],
+        "center": [
+          334,
+          122
         ]
       }
     ],
@@ -550,93 +500,29 @@
       {
         "symbol_class": "door",
         "bbox": [
-          103,
-          449,
-          223,
-          566
+          47,
+          887,
+          122,
+          956
         ],
         "center": [
-          163,
-          507
+          84,
+          921
         ]
       },
       {
         "symbol_class": "door",
         "bbox": [
-          509,
-          419,
-          654,
-          576
+          52,
+          947,
+          146,
+          1002
         ],
         "center": [
-          581,
-          497
+          99,
+          974
         ]
       }
     ]
-  },
-  "room_10": {
-    "room_class": "Room",
-    "room_type": "unknown",
-    "room_bbox": [
-      2,
-      24,
-      100,
-      1025
-    ],
-    "contained_symbols": [],
-    "doors": []
-  },
-  "room_11": {
-    "room_class": "Room",
-    "room_type": "unknown",
-    "room_bbox": [
-      656,
-      408,
-      843,
-      573
-    ],
-    "contained_symbols": [
-      {
-        "symbol_class": "stairs",
-        "bbox": [
-          785,
-          406,
-          846,
-          563
-        ],
-        "center": [
-          815,
-          484
-        ]
-      }
-    ],
-    "doors": []
-  },
-  "room_12": {
-    "room_class": "Room",
-    "room_type": "dining_room--reception",
-    "room_bbox": [
-      194,
-      261,
-      459,
-      356
-    ],
-    "contained_symbols": [
-      {
-        "symbol_class": "dining_table",
-        "bbox": [
-          127,
-          195,
-          532,
-          395
-        ],
-        "center": [
-          329,
-          295
-        ]
-      }
-    ],
-    "doors": []
   }
 }

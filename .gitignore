@@ -2,3 +2,5 @@
 
 # Ignore the .env file
 .env
+uploads
+

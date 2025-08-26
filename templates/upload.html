@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload • KSIA Layout Compliance Assistant</title>
-    <script src=https://cdn.tailwindcss.com></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -41,7 +41,9 @@
                         'scale-in': 'scaleIn 0.6s ease-out',
                         'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
                         'shimmer': 'shimmer 2.5s linear infinite',
-                        'float': 'float 6s ease-in-out infinite'
+                        'float': 'float 6s ease-in-out infinite',
+                        'spin-slow': 'spin 2s linear infinite',
+                        'pulse-soft': 'pulseSoft 2s ease-in-out infinite'
                     },
                     boxShadow: {
                         'cool': '0 4px 20px -2px rgba(74, 144, 226, 0.3)',
@@ -61,63 +63,117 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-       
+        
         * {
             font-family: 'Inter', sans-serif;
         }
- 
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
- 
+
         @keyframes slideUp {
             from { transform: translateY(50px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
- 
+
         @keyframes scaleIn {
             from { transform: scale(0.95); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
- 
+
         @keyframes shimmer {
             0% { background-position: -200px 0; }
             100% { background-position: calc(200px + 100%) 0; }
         }
- 
+
         @keyframes pulseGlow {
-            0%, 100% {
+            0%, 100% { 
                 box-shadow: 0 0 20px rgba(230, 185, 115, 0.4);
                 transform: scale(1);
             }
-            50% {
+            50% { 
                 box-shadow: 0 0 30px rgba(230, 185, 115, 0.6);
                 transform: scale(1.02);
             }
         }
- 
+
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
         }
- 
+
+        @keyframes pulseSoft {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
         body {
             background: #f8fafc;
             min-height: 100vh;
         }
- 
+
+        /* Enhanced Full-Screen Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .loading-card {
+            background: linear-gradient(135deg, #4a90e2 0%, #3578d4 50%, #2d4a6b 100%);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 10px 25px -5px rgba(74, 144, 226, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            max-width: 32rem;
+            width: 90%;
+            margin: 0 1rem;
+        }
+
+        .loading-spinner {
+            width: 2.5rem;
+            height: 2.5rem;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .progress-bar-container {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            height: 1rem;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         .glass-card {
             background: rgba(248, 250, 252, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(74, 144, 226, 0.2);
-            box-shadow:
+            box-shadow: 
                 0 20px 25px -5px rgba(30, 58, 95, 0.1),
                 0 10px 10px -5px rgba(30, 58, 95, 0.04),
                 0 0 0 1px rgba(74, 144, 226, 0.05);
         }
- 
+
         .file-upload-area {
             background: linear-gradient(145deg, rgba(248, 250, 252, 0.8) 0%, rgba(232, 236, 240, 0.9) 100%);
             border: 2px dashed rgba(74, 144, 226, 0.3);
@@ -125,7 +181,7 @@
             position: relative;
             overflow: hidden;
         }
- 
+
         .file-upload-area::before {
             content: '';
             position: absolute;
@@ -136,29 +192,29 @@
             background: linear-gradient(90deg, transparent, rgba(74, 144, 226, 0.1), transparent);
             transition: left 0.8s ease;
         }
- 
+
         .file-upload-area:hover {
             background: linear-gradient(145deg, rgba(248, 250, 252, 0.95) 0%, rgba(232, 236, 240, 1) 100%);
             border-color: rgba(74, 144, 226, 0.6);
             transform: translateY(-3px);
-            box-shadow:
+            box-shadow: 
                 0 15px 35px -5px rgba(74, 144, 226, 0.25),
                 0 5px 15px -3px rgba(30, 58, 95, 0.1);
         }
- 
+
         .file-upload-area:hover::before {
             left: 100%;
         }
- 
+
         .drag-over {
             background: linear-gradient(145deg, rgba(74, 144, 226, 0.15) 0%, rgba(106, 163, 232, 0.2) 100%) !important;
             border-color: rgba(74, 144, 226, 0.8) !important;
             transform: scale(1.02) !important;
-            box-shadow:
+            box-shadow: 
                 0 20px 45px -5px rgba(74, 144, 226, 0.35),
                 0 10px 20px -3px rgba(30, 58, 95, 0.1) !important;
         }
- 
+
         .btn-primary {
             background: linear-gradient(135deg, #4a90e2 0%, #3578d4 50%, #2d4a6b 100%);
             position: relative;
@@ -167,7 +223,7 @@
             box-shadow: 0 8px 25px -5px rgba(74, 144, 226, 0.4);
             border: 1px solid rgba(74, 144, 226, 0.3);
         }
- 
+
         .btn-primary::before {
             content: '';
             position: absolute;
@@ -178,128 +234,161 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.6s ease;
         }
- 
+
         .btn-primary:hover::before {
             left: 100%;
         }
- 
+
         .btn-primary:hover:not(:disabled) {
             transform: translateY(-3px);
-            box-shadow:
+            box-shadow: 
                 0 15px 40px -5px rgba(74, 144, 226, 0.5),
                 0 5px 15px -3px rgba(30, 58, 95, 0.2);
             background: linear-gradient(135deg, #6ba3e8 0%, #4a90e2 50%, #3c5a77 100%);
         }
- 
+
         .btn-primary:disabled {
             background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
             box-shadow: none;
             cursor: not-allowed;
             border-color: #9ca3af;
         }
- 
+
         .progress-bar {
             width: 0%;
             transition: width 0.4s ease;
-            background: linear-gradient(90deg, #4a90e2, #6ba3e8, #4a90e2);
+            background: linear-gradient(90deg, #ffffff, #f0f9ff, #ffffff);
             background-size: 200% 100%;
             animation: shimmer 2.5s linear infinite;
+            border-radius: 1rem;
+            height: 100%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
- 
+
         .icon-wrapper {
             background: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(76, 106, 131, 0.15) 100%);
             transition: all 0.4s ease;
             border: 1px solid rgba(74, 144, 226, 0.2);
         }
- 
+
         .file-upload-area:hover .icon-wrapper {
             background: linear-gradient(135deg, rgba(74, 144, 226, 0.2) 0%, rgba(76, 106, 131, 0.25) 100%);
             transform: scale(1.1);
             box-shadow: 0 8px 20px -5px rgba(74, 144, 226, 0.3);
         }
- 
+
         .status-badge {
             background: linear-gradient(135deg, rgba(5, 150, 105, 0.1) 0%, rgba(5, 150, 105, 0.15) 100%);
             border: 1px solid rgba(5, 150, 105, 0.3);
         }
- 
+
         .logo-glow {
             filter: drop-shadow(0 0 25px rgba(255, 167, 38, 0.6));
             animation: float 6s ease-in-out infinite;
         }
- 
+
         .text-shadow-warm {
             text-shadow: 0 2px 8px rgba(30, 58, 95, 0.3);
         }
- 
+
         ::-webkit-scrollbar {
             width: 12px;
         }
- 
+
         ::-webkit-scrollbar-track {
             background: rgba(232, 236, 240, 0.5);
         }
- 
+
         ::-webkit-scrollbar-thumb {
             background: linear-gradient(135deg, #4a90e2 0%, #3578d4 100%);
             border-radius: 6px;
             border: 2px solid rgba(232, 236, 240, 0.5);
         }
- 
+
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(135deg, #6ba3e8 0%, #4a90e2 100%);
+        }
+
+        /* Hide scrollbar when loading overlay is active */
+        body.loading-active {
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
+    
     <!-- Clean Background Image Section -->
-    <div class="relative bg-cover bg-center h-[700px]" style="background-image: url('/static/new demo background .jpg');">
+    <div class="relative bg-cover bg-center h-[390px]" style="background-image: url('/static/King-Salman-International-Airport-1536x420.jpg');">
+      
+        <!-- Overlay filter -->
+        <div class="absolute inset-0 bg-black bg-opacity-30 z-0"></div>
+      
+        <!-- Centered & shifted title -->
+        <div class="absolute inset-0 flex items-center justify-center z-10">
+          <h1 class="text-white text-4xl font-bold text-center -translate-y-12 translate-x-9">Welcome – Upload Your Files Below</h1>
+        </div>
+      
         <!-- Subtle overlay for text readability (much lighter) -->
         <div class="absolute inset-0 bg-black bg-opacity-20 z-0"></div>
- 
+
         <!-- Logo -->
-        <div class="absolute top-10 right-10 z-20 animate-fade-in">
-            <img src="/static/vectara-ai-removebg-preview.png" alt="Vectara Logo" class="h-20 logo-glow" />
+        <div class="absolute top-[-29px] right-[-30px] z-20">
+            <img src="/static/vectara-ai-removebg-preview.png" alt="Vectara Logo" style="height: 200px; width: auto;" />
         </div>
- 
+
         <!-- Enhanced Title Section -->
         <div class="absolute inset-0 flex items-center justify-center z-10">
             <div class="text-center text-white animate-slide-up max-w-4xl px-8">
-                <!-- <div class="inline-flex items-center justify-center w-32 h-32 rounded-3xl mb-10 border border-warm-light/30"
-                    style="background: rgba(255, 167, 38, 0.2); backdrop-filter: blur(10px);"> -->
-                    <svg class="w-16 h-16 text-warm-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <!-- <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" -->
-                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                    </svg>
-                </div>
-                <!-- <h1 class="text-7xl font-bold mb-6 text-shadow-warm tracking-tight">Upload Center</h1> -->
-                <!-- <p class="text-2xl text-white font-light leading-relaxed max-w-3xl mx-auto opacity-90">
-                    Upload your DXF architectural plans and compliance documentation for comprehensive analysis and validation -->
-                </p>
+                <svg class="w-16 h-16 text-warm-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <!-- <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" -->
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
             </div>
         </div>
     </div>
- 
-   <!-- Enhanced Main Upload Container -->
-    <div class="relative" style="margin-top: -450px;" class="z-10 px-8 pb-20">
-        <div class="max-w-7xl mx-auto">
-            <div class="glass-card rounded-3xl overflow-hidden animate-scale-in">
-                <!-- Enhanced Progress Indicator -->
-                <div id="progressContainer" class="hidden">
-                    <div class="bg-gradient-to-r from-accent via-blue-steel to-accent-dark text-white px-10 py-8">
-                        <div class="flex items-center justify-between mb-6">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-8 h-8 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                <span class="text-2xl font-bold">Processing Your Files</span>
-                            </div>
-                            <span id="progressText" class="text-xl font-mono bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm">0%</span>
-                        </div>
-                        <div class="bg-white/20 rounded-full h-4 overflow-hidden backdrop-blur-sm">
-                            <div id="progressBar" class="progress-bar rounded-full h-4 shadow-lg"></div>
-                        </div>
+
+    <!-- Enhanced Full-Screen Processing Overlay -->
+    <div id="progressContainer" class="loading-overlay hidden">
+        <div class="loading-card">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center space-x-4">
+                    <div class="loading-spinner"></div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-1">Processing Your Files</h3>
+                        <p class="text-white/80 text-sm">Please wait while we analyze your documents...</p>
                     </div>
                 </div>
- 
+                <div class="text-right">
+                    <span id="progressText" class="text-2xl font-bold text-white block">0%</span>
+                    <span class="text-white/60 text-xs">Complete</span>
+                </div>
+            </div>
+            
+            <div class="progress-bar-container mb-4">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            
+            <div class="flex items-center justify-center space-x-6 text-white/70 text-sm">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 bg-white/50 rounded-full animate-pulse-soft"></div>
+                    <span>Uploading files</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 bg-white/30 rounded-full"></div>
+                    <span>AI Analysis</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 bg-white/30 rounded-full"></div>
+                    <span>Generate Report</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Main Upload Container -->
+    <div class="relative z-10 px-8 pb-20" style="margin-top: -100px;">
+        <div class="max-w-7xl mx-auto">
+            <div class="glass-card rounded-3xl overflow-hidden animate-scale-in">
                 <!-- Enhanced Upload Form -->
                 <div id="uploadForm" class="p-16">
                     <!-- Enhanced Header -->
@@ -307,11 +396,11 @@
                         <h2 class="text-4xl font-bold text-primary mb-4">Document Upload Center</h2>
                         <div class="w-24 h-1 bg-blue-gradient mx-auto mb-6 rounded-full"></div>
                         <p class="text-xl text-cool-gray max-w-3xl mx-auto leading-relaxed">
-                            Select your architectural DXF files and compliance documentation to begin the automated analysis process.
+                            Select your architectural DXF files and compliance documentation to begin the automated analysis process. 
                             Our system will validate layouts against building codes and regulatory requirements.
                         </p>
                     </div>
- 
+
                     <!-- Enhanced File Upload Areas -->
                     <div class="grid lg:grid-cols-2 gap-12 mb-16">
                         <!-- Enhanced DXF File Upload -->
@@ -327,7 +416,7 @@
                                 </label>
                                 <span class="text-sm text-cool-gray bg-steel-gray px-4 py-2 rounded-full border border-steel-gray-dark">Required</span>
                             </div>
-                           
+                            
                             <div id="dxfDropZone" class="file-upload-area rounded-3xl p-12 text-center cursor-pointer group min-h-[320px] flex flex-col justify-center border-2">
                                 <div id="dxfPlaceholder" class="space-y-8">
                                     <div class="icon-wrapper inline-flex items-center justify-center w-24 h-24 rounded-3xl">
@@ -346,7 +435,7 @@
                                         </div>
                                     </div>
                                 </div>
-                               
+                                
                                 <div id="dxfPreview" class="hidden space-y-6">
                                     <div class="status-badge inline-flex items-center justify-center w-24 h-24 rounded-3xl">
                                         <svg class="w-12 h-12 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -365,7 +454,7 @@
                                     </button>
                                 </div>
                             </div>
-                           
+                            
                             <input id="dxfInput" type="file" accept=".dxf" class="hidden" />
                             <div id="dxfError" class="hidden flex items-start p-6 text-base text-red-800 bg-red-50 rounded-2xl border border-red-200">
                                 <svg class="w-6 h-6 mr-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -374,7 +463,7 @@
                                 <span>Only .dxf files are allowed. Please select a valid AutoCAD DXF file.</span>
                             </div>
                         </div>
- 
+
                         <!-- Enhanced Document File Upload -->
                         <div class="space-y-8">
                             <div class="flex items-center justify-between">
@@ -388,7 +477,7 @@
                                 </label>
                                 <span class="text-sm text-cool-gray bg-steel-gray px-4 py-2 rounded-full border border-steel-gray-dark">Required</span>
                             </div>
-                           
+                            
                             <div id="docDropZone" class="file-upload-area rounded-3xl p-12 text-center cursor-pointer group min-h-[320px] flex flex-col justify-center border-2">
                                 <div id="docPlaceholder" class="space-y-8">
                                     <div class="icon-wrapper inline-flex items-center justify-center w-24 h-24 rounded-3xl">
@@ -407,7 +496,7 @@
                                         </div>
                                     </div>
                                 </div>
-                               
+                                
                                 <div id="docPreview" class="hidden space-y-6">
                                     <div class="status-badge inline-flex items-center justify-center w-24 h-24 rounded-3xl">
                                         <svg class="w-12 h-12 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -426,7 +515,7 @@
                                     </button>
                                 </div>
                             </div>
-                           
+                            
                             <input id="docInput" type="file" accept=".pdf,.doc,.docx,.txt" class="hidden" />
                             <div id="docError" class="hidden flex items-start p-6 text-base text-red-800 bg-red-50 rounded-2xl border border-red-200">
                                 <svg class="w-6 h-6 mr-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -436,24 +525,24 @@
                             </div>
                         </div>
                     </div>
- 
+
                     <!-- Enhanced Upload Button -->
                     <div class="text-center space-y-8">
-                        <button id="uploadBtn" disabled
+                        <button id="uploadBtn" disabled 
                                 class="btn-primary disabled:transform-none disabled:shadow-none text-white text-2xl font-bold px-20 py-6 rounded-2xl transition-all duration-300 inline-flex items-center justify-center min-w-[320px]">
                             <span id="uploadBtnText">Select Files to Continue</span>
                             <svg id="uploadBtnIcon" class="hidden ml-4 w-7 h-7 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                             </svg>
                         </button>
-                       
+                        
                         <div id="uploadStatus" class="hidden">
                             <div class="inline-flex items-center px-10 py-5 bg-gradient-to-r from-blue-50 to-blue-100 backdrop-blur-sm text-blue-700 rounded-2xl border border-blue-200">
                                 <div class="w-5 h-5 bg-blue-400 rounded-full mr-5 animate-pulse"></div>
                                 <span class="text-xl font-bold">Processing your architectural files...</span>
                             </div>
                         </div>
- 
+
                         <!-- Enhanced Information Panel -->
                         <div class="mt-12 grid md:grid-cols-2 gap-8">
                             <div class="p-8 bg-gradient-to-br from-cream to-steel-gray rounded-2xl border border-steel-gray-dark shadow-cool">
@@ -482,7 +571,7 @@
                                     </div>
                                 </div>
                             </div>
- 
+
                             <div class="p-8 bg-gradient-to-br from-cream to-steel-gray rounded-2xl border border-steel-gray-dark shadow-cool">
                                 <div class="flex items-start space-x-4">
                                     <div class="w-12 h-12 bg-blue-steel/20 rounded-xl flex items-center justify-center flex-shrink-0 border border-blue-steel/30">
@@ -515,12 +604,12 @@
             </div>
         </div>
     </div>
- 
+
     <script>
         // File upload functionality
         let dxfFile = null;
         let docFile = null;
- 
+
         // Get elements
         const dxfInput = document.getElementById('dxfInput');
         const docInput = document.getElementById('docInput');
@@ -533,7 +622,7 @@
         const progressContainer = document.getElementById('progressContainer');
         const progressBar = document.getElementById('progressBar');
         const progressText = document.getElementById('progressText');
- 
+
         // File size formatter
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 Bytes';
@@ -542,7 +631,7 @@
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
- 
+
         // Update upload button state
         function updateUploadButton() {
             if (dxfFile && docFile) {
@@ -553,7 +642,19 @@
                 uploadBtnText.textContent = 'Select Files to Continue';
             }
         }
- 
+
+        // Show loading overlay
+        function showLoadingOverlay() {
+            progressContainer.classList.remove('hidden');
+            document.body.classList.add('loading-active');
+        }
+
+        // Hide loading overlay
+        function hideLoadingOverlay() {
+            progressContainer.classList.add('hidden');
+            document.body.classList.remove('loading-active');
+        }
+
         // DXF file handling
         dxfDropZone.addEventListener('click', () => dxfInput.click());
         dxfDropZone.addEventListener('dragover', (e) => {
@@ -571,32 +672,32 @@
                 handleDxfFile(files[0]);
             }
         });
- 
+
         dxfInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
                 handleDxfFile(e.target.files[0]);
             }
         });
- 
+
         function handleDxfFile(file) {
             const dxfError = document.getElementById('dxfError');
-           
+            
             if (!file.name.toLowerCase().endsWith('.dxf')) {
                 dxfError.classList.remove('hidden');
                 return;
             }
-           
+            
             dxfError.classList.add('hidden');
             dxfFile = file;
-           
+            
             document.getElementById('dxfPlaceholder').classList.add('hidden');
             document.getElementById('dxfPreview').classList.remove('hidden');
             document.getElementById('dxfFileName').textContent = file.name;
             document.getElementById('dxfFileSize').textContent = formatFileSize(file.size);
-           
+            
             updateUploadButton();
         }
- 
+
         document.getElementById('removeDxf').addEventListener('click', () => {
             dxfFile = null;
             dxfInput.value = '';
@@ -604,7 +705,7 @@
             document.getElementById('dxfPreview').classList.add('hidden');
             updateUploadButton();
         });
- 
+
         // Document file handling
         docDropZone.addEventListener('click', () => docInput.click());
         docDropZone.addEventListener('dragover', (e) => {
@@ -622,33 +723,33 @@
                 handleDocFile(files[0]);
             }
         });
- 
+
         docInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
                 handleDocFile(e.target.files[0]);
             }
         });
- 
+
         function handleDocFile(file) {
             const docError = document.getElementById('docError');
             const allowedExts = ['.pdf', '.doc', '.docx', '.txt'];
-           
+            
             if (!allowedExts.some(ext => file.name.toLowerCase().endsWith(ext))) {
                 docError.classList.remove('hidden');
                 return;
             }
-           
+            
             docError.classList.add('hidden');
             docFile = file;
-           
+            
             document.getElementById('docPlaceholder').classList.add('hidden');
             document.getElementById('docPreview').classList.remove('hidden');
             document.getElementById('docFileName').textContent = file.name;
             document.getElementById('docFileSize').textContent = formatFileSize(file.size);
-           
+            
             updateUploadButton();
         }
- 
+
         document.getElementById('removeDoc').addEventListener('click', () => {
             docFile = null;
             docInput.value = '';
@@ -656,64 +757,87 @@
             document.getElementById('docPreview').classList.add('hidden');
             updateUploadButton();
         });
- 
+
         // Upload functionality
         uploadBtn.addEventListener('click', async () => {
             if (!dxfFile || !docFile) return;
- 
-            // Show loading state
+
+            // Show full-screen loading overlay
+            showLoadingOverlay();
+
+            // Update button state
             uploadBtn.disabled = true;
             uploadBtnText.textContent = 'Uploading...';
             uploadBtnIcon.classList.remove('hidden');
             uploadStatus.classList.remove('hidden');
-            progressContainer.classList.remove('hidden');
- 
+
             const formData = new FormData();
             formData.append('dxf', dxfFile);
             formData.append('doc', docFile);
- 
+
             try {
-                // Simulate progress
+                // Simulate progress with enhanced visual feedback
                 let progress = 0;
                 const progressInterval = setInterval(() => {
-                    progress += Math.random() * 15;
+                    progress += Math.random() * 12 + 3; // Smoother progress increments
                     if (progress > 90) progress = 90;
                     progressBar.style.width = progress + '%';
                     progressText.textContent = Math.round(progress) + '%';
-                }, 200);
- 
+                    
+                    // Update process indicators based on progress
+                    const indicators = document.querySelectorAll('.loading-overlay .w-2');
+                    if (progress > 30) {
+                        indicators[1]?.classList.remove('bg-white/30');
+                        indicators[1]?.classList.add('bg-white/50', 'animate-pulse-soft');
+                    }
+                    if (progress > 70) {
+                        indicators[2]?.classList.remove('bg-white/30');
+                        indicators[2]?.classList.add('bg-white/50', 'animate-pulse-soft');
+                    }
+                }, 300);
+
                 const response = await fetch('/upload', {
                     method: 'POST',
                     body: formData
                 });
- 
+
                 clearInterval(progressInterval);
                 progressBar.style.width = '100%';
                 progressText.textContent = '100%';
- 
+
                 if (response.ok) {
                     const data = await response.json();
                     sessionStorage.setItem('uploadData', JSON.stringify({
                         ...data,
                         dxf_filename: dxfFile.name
                     }));
-                   
+                    
+                    // Show completion state briefly before redirect
                     setTimeout(() => {
                         window.location.href = '/results';
-                    }, 500);
+                    }, 1000);
                 } else {
                     throw new Error('Upload failed');
                 }
             } catch (error) {
                 console.error('Upload error:', error);
+                hideLoadingOverlay();
                 alert('Upload failed: ' + error.message);
-               
+                
                 // Reset state
                 uploadBtn.disabled = false;
                 uploadBtnText.textContent = 'Begin Analysis';
                 uploadBtnIcon.classList.add('hidden');
                 uploadStatus.classList.add('hidden');
-                progressContainer.classList.add('hidden');
+            }
+        });
+        
+        // Prevent page scrolling when overlay is active
+        document.addEventListener('keydown', (e) => {
+            if (document.body.classList.contains('loading-active')) {
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                }
             }
         });
     </script>

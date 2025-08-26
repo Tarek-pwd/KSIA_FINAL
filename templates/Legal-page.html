@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Legal Chatbot • KSIA Services</title>
-    <script src=https://cdn.tailwindcss.com></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -35,38 +35,43 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-       
+        
         * {
             font-family: 'Inter', sans-serif;
         }
- 
+
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
         }
- 
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
- 
+
         @keyframes slideUp {
             from { transform: translateY(100px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
- 
+
         @keyframes gradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
- 
-        .gradient-bg {
+
+        /* .gradient-bg {
             background: linear-gradient(-45deg, #001f3f, #f59e0b, #001f3f, #d97706);
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
+        } */
+
+
+        .gradient-bg {
+            background-color: #001f3f;
         }
- 
+
         .glass-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
@@ -74,11 +79,11 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px 0 rgba(0, 31, 63, 0.37);
         }
- 
+
         .chat-message {
             animation: slideUp 0.4s ease-out;
         }
- 
+
         .typing-indicator span {
             display: inline-block;
             width: 8px;
@@ -87,33 +92,33 @@
             background: #f59e0b;
             animation: typing 1.4s infinite;
         }
- 
+
         .typing-indicator span:nth-child(2) {
             animation-delay: 0.2s;
         }
- 
+
         .typing-indicator span:nth-child(3) {
             animation-delay: 0.4s;
         }
- 
+
         @keyframes typing {
             0%, 60%, 100% { transform: translateY(0); }
             30% { transform: translateY(-10px); }
         }
- 
+
         ::-webkit-scrollbar {
             width: 10px;
         }
- 
+
         ::-webkit-scrollbar-track {
             background: rgba(0, 31, 63, 0.1);
         }
- 
+
         ::-webkit-scrollbar-thumb {
             background: rgba(245, 158, 11, 0.5);
             border-radius: 5px;
         }
- 
+
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(245, 158, 11, 0.8);
         }
@@ -146,7 +151,7 @@
             </div>
         </div>
     </header>
- 
+
     <!-- Main Chat Container -->
     <main class="container mx-auto px-6 py-8 max-w-4xl">
         <div class="glass-card rounded-3xl shadow-2xl animate-fade-in overflow-hidden">
@@ -163,7 +168,7 @@
                     </div>
                 </div>
             </div>
- 
+
             <!-- Important Notice -->
             <div class="bg-amber-500/20 border-l-4 border-warning p-4">
                 <div class="flex items-start space-x-3">
@@ -173,7 +178,7 @@
                     <p class="text-sm text-amber-100">This AI assistant provides general legal information only and does not constitute legal advice. For specific legal matters, please consult with a qualified attorney.</p>
                 </div>
             </div>
- 
+
             <!-- Chat Messages Area -->
             <div id="chatMessages" class="h-96 overflow-y-auto p-6 space-y-4 bg-gray-900/30">
                 <!-- Welcome Message -->
@@ -199,7 +204,7 @@
                     </div>
                 </div>
             </div>
- 
+
             <!-- Quick Topics -->
             <div class="px-6 py-4 border-t border-white/10">
                 <p class="text-sm text-gray-400 mb-3">Popular Topics:</p>
@@ -218,17 +223,17 @@
                     </button>
                 </div>
             </div>
- 
+
             <!-- Chat Input -->
             <div class="p-6 border-t border-white/10">
                 <div class="flex gap-3">
-                    <input
-                        id="messageInput"
-                        type="text"
-                        placeholder="Ask your legal compliance question..."
+                    <input 
+                        id="messageInput" 
+                        type="text" 
+                        placeholder="Ask your legal compliance question..." 
                         class="flex-1 bg-white/10 border border-white/20 rounded-xl px-5 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-warning transition-all"
                     />
-                    <button
+                    <button 
                         id="sendButton"
                         class="bg-gradient-to-r from-warning to-orange-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
                     >
@@ -241,13 +246,13 @@
             </div>
         </div>
     </main>
- 
+
     <script>
         // Chat functionality
         const chatMessages = document.getElementById('chatMessages');
         const messageInput = document.getElementById('messageInput');
         const sendButton = document.getElementById('sendButton');
- 
+
         // Quick action buttons
         document.querySelectorAll('.quick-action').forEach(button => {
             button.addEventListener('click', () => {
@@ -255,19 +260,19 @@
                 sendMessage();
             });
         });
- 
+
         // Send message function
         function sendMessage() {
             const message = messageInput.value.trim();
             if (!message) return;
- 
+
             // Add user message
             addMessage(message, 'user');
             messageInput.value = '';
- 
+
             // Show typing indicator
             showTypingIndicator();
- 
+
             // Simulate bot response
             setTimeout(() => {
                 removeTypingIndicator();
@@ -275,12 +280,12 @@
                 addMessage(response, 'bot');
             }, 1500);
         }
- 
+
         // Add message to chat
         function addMessage(text, sender) {
             const messageDiv = document.createElement('div');
             messageDiv.className = 'chat-message';
-           
+            
             if (sender === 'user') {
                 messageDiv.innerHTML = `
                     <div class="flex items-start space-x-3 justify-end">
@@ -308,11 +313,11 @@
                     </div>
                 `;
             }
-           
+            
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
- 
+
         // Show typing indicator
         function showTypingIndicator() {
             const typingDiv = document.createElement('div');
@@ -337,7 +342,7 @@
             chatMessages.appendChild(typingDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
- 
+
         // Remove typing indicator
         function removeTypingIndicator() {
             const typingIndicator = document.getElementById('typingIndicator');
@@ -345,11 +350,11 @@
                 typingIndicator.remove();
             }
         }
- 
+
         // Generate Legal response (mock responses)
         function generateLegalResponse(message) {
             const lowerMessage = message.toLowerCase();
-           
+            
             if (lowerMessage.includes('gdpr') || lowerMessage.includes('data privacy')) {
                 return "GDPR (General Data Protection Regulation) key requirements:\n\n• Lawful basis for data processing\n• Explicit consent from data subjects\n• Right to access, rectification, and erasure\n• Data protection by design and default\n• Data breach notification within 72 hours\n• Appointment of DPO for certain organizations\n\nRemember: This is general information. Consult legal counsel for specific compliance strategies.";
             } else if (lowerMessage.includes('contract')) {
@@ -364,7 +369,7 @@
                 return "I can provide general information about:\n\n• Regulatory compliance\n• Contract fundamentals\n• Intellectual property\n• Employment law\n• Corporate governance\n• Data privacy\n\nPlease ask a specific question. Remember, this is educational information only - not legal advice. Always consult qualified legal counsel for your specific situation.";
             }
         }
- 
+
         // Event listeners
         sendButton.addEventListener('click', sendMessage);
         messageInput.addEventListener('keypress', (e) => {
