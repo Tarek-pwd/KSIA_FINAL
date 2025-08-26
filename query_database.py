@@ -7,7 +7,7 @@ from decimal import Decimal
 import uuid  # For generating unique IDs
 
 # --- Database Connection Details ---
-DB_NAME = "HR_db_New"
+DB_NAME = "HR_FINAL_DB"
 DB_USER = "postgres"
 DB_PASSWORD = "postgres"
 DB_HOST = "localhost"
@@ -26,7 +26,7 @@ def execute_query(sql_query):
             port=DB_PORT
         )
         cur = conn.cursor()
-        
+    
         print("🔹 Executing query:\n", sql_query)
         cur.execute(sql_query)
         rows = cur.fetchall()
@@ -82,6 +82,10 @@ def execute_query(sql_query):
         if conn:
             conn.close()
 
+
+
+
+execute_query("SELECT * FROM extras")
 # Example usage:
 # query = "SELECT e.first_name, e.last_name FROM employees e WHERE e.first_name = 'Michael' AND e.last_name = 'Mcclain';"
 # results = execute_query(query)

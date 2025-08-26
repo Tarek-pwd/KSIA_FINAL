@@ -42,6 +42,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
+from reason import reason_openai
 
 # Register an Arabic font like Amiri or Noto
 pdfmetrics.registerFont(TTFont('Amiri', 'Amiri-Regular.ttf'))  
@@ -689,7 +690,6 @@ def generate_summary():
 # ========== END REPORTS FUNCTIONALITY ==========
 
 # ========== OTHER EXISTING ROUTES ==========
-
 @app.route('/ask_HR', methods=["POST"])
 def ask_hr_bot():
     try:
@@ -700,14 +700,33 @@ def ask_hr_bot():
         message = data['user_message']
         print(f"Backend processing message: {message}")
        
-        # Run the query
-        response = run_query(message)
-        print(f"Backend generated response: {response}")
-       
-        return jsonify({
-            "bot_response": response,
-            "status": "success"
-        })
+        def generate():
+            try:
+                # Run the query first to get the SQL result
+                sql_response = run_query(message)
+                print(f"SQL Response: {sql_response}")
+                
+                # If SQL query returned no results or error
+                if not sql_response or "I dont know the answer" in str(sql_response):
+                    # Yield the error message to frontend
+                    yield "I couldn't find the information in the database. This could mean:\n"
+                    yield "• The employee might not exist in the database\n"
+                    yield "• The name might be spelled differently\n"
+                    yield "• There might be a data issue\n\n"
+                    yield "Please verify the employee name and try again."
+                else:
+                    # Create the reasoning prompt with actual data
+                    reason_prompt = f"the user query was {message} and after executing the sql statement necessary, the output was {sql_response}"
+                    
+                    # Stream the reasoning response
+                    for chunk in reason_openai(reason_prompt):
+                        yield chunk
+                    
+            except Exception as e:
+                print(f"Error in generate: {str(e)}")
+                yield f"Error: {str(e)}"
+        
+        return Response(stream_with_context(generate()), content_type='text/plain')
        
     except Exception as e:
         print(f"Error in ask_hr_bot: {str(e)}")
@@ -717,6 +736,7 @@ def ask_hr_bot():
             "error": "An error occurred processing your request",
             "status": "error"
         }), 500
+
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -916,6 +936,7 @@ def serve_analysis_preview(filename):
     return send_from_directory('analysis_outputs', filename)
 
 from analysis_core import run_full_analysis
+
 @app.route('/run-analysis', methods=['POST'])
 def run_analysis():
     print("Run analysis called!")
@@ -935,83 +956,16 @@ def run_analysis():
         det_model = YOLO("final_detection.pt")
         seg_model = YOLO("best.pt")
 
-        # Run detection with custom confidence threshold
-        # You can adjust these confidence values as needed
-        det_result = det_model(analysis_path, conf=0.25)[0]  # Lower conf = more detections
-        seg_result = seg_model(analysis_path, conf=0.25)[0]  # Adjust as needed
+        # Run detection on WHITE image
+        det_result = det_model(analysis_path)[0]
+        seg_result = seg_model(analysis_path)[0]
 
         # Load the BLACK background image for display
         black_img = cv2.imread(display_path)
         
-        # For detection (objects) - use normal plot
-        det_img = det_result.plot(
-            img=black_img.copy(),  # Use copy to not modify original
-            conf=False,            # Don't show confidence numbers
-            labels=True,           # Show object names
-            line_width=3,          # Thicker lines
-            masks=False            # No masks for detection
-        )
-        
-        # For segmentation (rooms) - plot with masks
-        seg_img = seg_result.plot(
-            img=black_img.copy(),  # Use copy
-            conf=False,            # Don't show confidence numbers
-            labels=True,           # Show room labels
-            line_width=2,          # Thinner lines for rooms
-            masks=True,            # SHOW ACTUAL ROOM SHAPES (masks)
-            boxes=False            # DON'T show bounding boxes for rooms
-        )
-
-        # Alternative: If the above doesn't work, manually draw masks
-        if seg_result.masks is not None:
-            # Create a colored overlay for room masks
-            seg_img_manual = black_img.copy()
-            
-            # Define colors for different room types (BGR format)
-            room_colors = {
-                0: (255, 0, 0),      # Blue
-                1: (0, 255, 0),      # Green
-                2: (0, 0, 255),      # Red
-                3: (255, 255, 0),    # Cyan
-                4: (255, 0, 255),    # Magenta
-                5: (0, 255, 255),    # Yellow
-            }
-            
-            # Draw each room mask
-            masks = seg_result.masks.data.cpu().numpy()
-            classes = seg_result.boxes.cls.cpu().numpy()
-            
-            for i, (mask, cls) in enumerate(zip(masks, classes)):
-                # Resize mask to image size
-                mask_resized = cv2.resize(mask, (black_img.shape[1], black_img.shape[0]))
-                mask_binary = (mask_resized > 0.5).astype(np.uint8)
-                
-                # Create colored mask
-                color = room_colors.get(int(cls), (128, 128, 128))
-                colored_mask = np.zeros_like(seg_img_manual)
-                colored_mask[mask_binary == 1] = color
-                
-                # Blend with original image (transparency)
-                seg_img_manual = cv2.addWeighted(seg_img_manual, 1, colored_mask, 0.3, 0)
-                
-                # Draw room contours
-                contours, _ = cv2.findContours(mask_binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-                cv2.drawContours(seg_img_manual, contours, -1, color, 2)
-                
-                # Add room label
-                if contours:
-                    # Get centroid of largest contour
-                    largest_contour = max(contours, key=cv2.contourArea)
-                    M = cv2.moments(largest_contour)
-                    if M["m00"] != 0:
-                        cx = int(M["m10"] / M["m00"])
-                        cy = int(M["m01"] / M["m00"])
-                        room_name = seg_model.names[int(cls)]
-                        cv2.putText(seg_img_manual, room_name, (cx-30, cy), 
-                                  cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-            
-            # Use the manually drawn version if needed
-            seg_img = seg_img_manual
+        # Plot results on BLACK background (no confidence scores)
+        det_img = det_result.plot(img=black_img, conf=False, labels=True, line_width=3)
+        seg_img = seg_result.plot(img=black_img, conf=False, labels=True, line_width=3)
 
         # Save the results
         os.makedirs("analysis_outputs", exist_ok=True)
@@ -1027,8 +981,6 @@ def run_analysis():
         })
 
     except Exception as e:
-        import traceback
-        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
     
 # ========== CURRICULUM ROUTES ==========

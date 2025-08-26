@@ -422,26 +422,86 @@ exportButton.classList.add('opacity-50', 'cursor-not-allowed');
         });
  
         // Send message function
-        function sendMessage() {
-            const message = messageInput.value.trim();
+function sendMessage() {
+        const message = messageInput.value.trim();
+        if (!message) return;
+        
+        // 1. Add user message to chat
+        addMessage(message, 'user');
+        
+        // 2. Clear input field
+        messageInput.value = '';
+        
+        // 3. Show typing indicator
+        showTypingIndicator();
+        
+        // 4. Call streamBotResponse to get the bot's response
+        streamBotResponse(message);
+}
 
-            if (!message) return;
- 
-            // Add user message
-            addMessage(message, 'user');
-            messageInput.value = '';
- 
-            // Show typing indicator
-            showTypingIndicator();
- 
-            // Simulate bot response
-            generateHRResponse(message).then(reply => {
-            console.log("REPLY IS:", reply);
-            removeTypingIndicator();  // 💡 Don't forget this!
-            addMessage(reply, 'bot');
-        });
-
+// Stream bot response - handles the actual API call and streaming
+function streamBotResponse(message) {
+    fetch('/ask_HR', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_message: message })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let fullResponse = '';
+        
+        // Create a UNIQUE ID for EACH message
+        const messageId = 'streaming-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        
+        // Create bot message div
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message';
+        messageDiv.innerHTML = `
+            <div class="flex items-start space-x-3">
+                <div class="w-10 h-10 bg-success/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 max-w-md">
+                    <p class="text-white text-base" id="${messageId}"></p>
+                </div>
+            </div>
+        `;
+        
+        // Remove typing indicator and add message div
+        removeTypingIndicator();
+        chatMessages.appendChild(messageDiv);
+        const streamingText = document.getElementById(messageId);
+        
+        // Read stream
+        return reader.read().then(function processText({ done, value }) {
+            if (done) {
+                return fullResponse;
+            }
+            
+            const chunk = decoder.decode(value, { stream: true });
+            fullResponse += chunk;
+            
+            // Update THIS SPECIFIC message with formatted text
+            streamingText.innerHTML = fullResponse.replace(/\n/g, '<br>');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return reader.read().then(processText);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        removeTypingIndicator();
+        addMessage("Sorry, I encountered an error processing your request. Please try again.", 'bot');
+    });
+}
+
  
         // Add message to chat
         function addMessage(text, sender) {
@@ -516,20 +576,24 @@ exportButton.classList.add('opacity-50', 'cursor-not-allowed');
             }
         }
 
-       
         const button_prompts = {
-            0: "Show employees with iqama expiring in the next 30 days. Hint: use the Employee table and filter on iqama_expiry_date BETWEEN CURRENT_DATE() AND DATE_ADD(CURRENT_DATE() on the INTERVAL of 30 DAY).",
-            1: "Show employees with iqama expiring in the next 60 days. Hint: use the Employee table and filter on iqama_expiry_date BETWEEN CURRENT_DATE() AND DATE_ADD(CURRENT_DATE() on the INTERVAL of 60 DAY).",
-            2: "Show employees with iqama expiring in the next 90 days. Hint: use the Employee table and filter on iqama_expiry_date BETWEEN CURRENT_DATE() AND DATE_ADD(CURRENT_DATE() on the INTERVAL of 90 DAY).",
-            3: "Show employees who were late this week. Hint: use the Attendance table and filter att_date BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) AND CURRENT_DATE() and check_in who is greater than '10:00:00'.",
-            4: "Show employees with frequent lateness (3+ times). Hint: use the Attendance table and filter records in the past 30 days where check_in is greater than '10:00:00' and GROUP BY emp_id and HAVING COUNT(*) >= 3.",
-            5: "Show employees present today. Hint: use the Attendance table and filter att_date = CURRENT_DATE() AND status = 'Present'.",
-            6: "Show employees on leave today. Hint: use the Attendance table and filter att_date = CURRENT_DATE() AND status = 'On Leave'.",
-            7: "Show employees absent today. Hint: use the Attendance table and filter att_date = CURRENT_DATE() AND status = 'Absent'.",
-            8: "Show employees who maintainted a rating >= 4 over the three years. Hint: use the Rating table and filter rate_2022 >= 4 AND rate_2023 >= 4 AND rate_2024 >= 4.",
-            9: "Show employees whose salary stayed the same or decreased over the three year period. Hint: use the Salary_History table and filter salary_2024 <= salary_2023 AND salary_2023 <= salary_2022.",
-            10:"Show employees whose absences have increased over the three year period. Hint: use the Yearly_Absences table and filter absence_2024 > absence_2023 AND absence_2023 > absence_2022.",
-        };
+
+            0: " TODAYS DATE IS 28TH OF JULY 2025 Show employees with iqama expiring within the next 30 days from today -- 28th of july 2025 give all their names as list. Hint: use the employees table and filter on iqama_expiry_date BETWEEN CURRENT_DATE() and 30 days from now).",
+            1: "Show employees with iqama expiring in the next 60 days. Hint: use the employees table and filter on iqama_expiry_date BETWEEN CURRENT_DATE() AND DATE_ADD(CURRENT_DATE() on the INTERVAL of 60 DAY).",
+            2: "Show employees with iqama expiring in the next 90 days. Hint: use the employees table and filter on iqama_expiry_date BETWEEN CURRENT_DATE() AND DATE_ADD(CURRENT_DATE() on the INTERVAL of 90 DAY).",
+            3: "Show employees who were late this week. Hint: use the attendance table and filter att_date BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) AND CURRENT_DATE() and check_in who is greater than '10:00:00'.",
+            4: "Show employees with frequent lateness (3+ times). Hint: use the attendance table and filter records in the past 30 days where check_in is greater than '10:00:00' and GROUP BY emp_id and HAVING COUNT(*) >= 3.",
+            5: "Show employees present today. Hint: use the attendance table and filter att_date = CURRENT_DATE() AND attendance_status = 'Present'.",
+            6: "Show employees on leave today. Hint: use the attendance table and filter att_date = CURRENT_DATE() AND attendance_status = 'On Leave'.",
+            7: "Show employees absent today. Hint: use the attendance table and filter att_date = CURRENT_DATE() AND attendance_status = 'Absent'.",
+            8: "Show employees who maintainted a rating >= 4 over the three years. Hint: use the rating table and filter rate_2022 >= 4 AND rate_2023 >= 4 AND rate_2024 >= 4.",
+            9: "Show employees whose salary stayed the same or decreased over the three year period. Hint: use the salaries table and filter salary_2024 <= salary_2023 AND salary_2023 <= salary_2022.",
+            10:"Show employees whose absences have increased over the three year period. Hint: use the attendance table and filter yearly_absence_2024 > yearly_absence_2023 AND yearly_absence_2023 > yearlyabsence_2022.",
+};
+
+
+
+
        
 
         const buttons = document.querySelectorAll("#durationButtons button");
@@ -539,76 +603,106 @@ exportButton.classList.add('opacity-50', 'cursor-not-allowed');
 
         
         buttons.forEach((btn, index) => {
-        btn.addEventListener("click", () => {
-            const prompt = button_prompts[index];
+    btn.addEventListener("click", () => {
+        const prompt = button_prompts[index];
+        
+        // Show typing indicator
+        showTypingIndicator();
+        
+        // Call streamBotResponse directly (NOT generateHRResponse)
+        streamBotResponse(prompt);
+    });
+});
+        
 
-            // ✅ Don't show user message, just send prompt silently
-            showTypingIndicator();
+latebuttons.forEach((btn, index) => {
+    btn.addEventListener("click", () => {
+        const prompt = button_prompts[index+3];
+        console.log("late prompt ", prompt)
+        
+        // Show typing indicator
+        showTypingIndicator();
+        
+        // Call streamBotResponse directly
+        streamBotResponse(prompt);
+    });
+});
 
-            generateHRResponse(prompt).then(reply => {
-            removeTypingIndicator();
-            addMessage(reply, 'bot');
-            });
-        });
-        });
-
-        latebuttons.forEach((btn, index) => {
-        btn.addEventListener("click", () => {
-            const prompt = button_prompts[index+3];
-            console.log("late prompt ", prompt)
-
-            // ✅ Don't show user message, just send prompt silently
-            showTypingIndicator();
-
-            generateHRResponse(prompt).then(reply => {
-            removeTypingIndicator();
-            addMessage(reply, 'bot');
-            });
-        });
-        });
-
-        attendancebuttons.forEach((btn, index) => {
-        btn.addEventListener("click", () => {
-            const prompt = button_prompts[index+5];
-            console.log("late prompt ", prompt)
-
-            // ✅ Don't show user message, just send prompt silently
-            showTypingIndicator();
-
-            generateHRResponse(prompt).then(reply => {
-            removeTypingIndicator();
-            addMessage(reply, 'bot');
-            });
-        });
-        });
+attendancebuttons.forEach((btn, index) => {
+    btn.addEventListener("click", () => {
+        const prompt = button_prompts[index+5];
+        console.log("attendance prompt ", prompt)
+        
+        // Show typing indicator
+        showTypingIndicator();
+        
+        // Call streamBotResponse directly
+        streamBotResponse(prompt);
+    });
+});
  
  
         // Generate HR response (mock responses)
         function generateHRResponse(message) {
-            console.log("got the message " + message);
-
-            return fetch('/ask_HR', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_message: message })
-            })
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return res.json();
-            })
-            .then(response => {
-                console.log("got response >>" + response.bot_response);
-                return response.bot_response;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                return "Sorry, I encountered an error processing your request. Please try again.";
-            });
-
-        
+    console.log("got the message " + message);
+    
+    return fetch('/ask_HR', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_message: message })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        
+        // Handle streaming response
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let fullResponse = '';
+        
+        // Create a temporary message div for streaming
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message';
+        messageDiv.innerHTML = `
+            <div class="flex items-start space-x-3">
+                <div class="w-10 h-10 bg-success/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 max-w-md">
+                    <p class="text-white text-base" id="streaming-text"></p>
+                </div>
+            </div>
+        `;
+        
+        // Remove typing indicator and add streaming message
+        removeTypingIndicator();
+        chatMessages.appendChild(messageDiv);
+        const streamingText = document.getElementById('streaming-text');
+        
+        return reader.read().then(function processText({ done, value }) {
+            if (done) {
+                return fullResponse;
+            }
+            
+            const chunk = decoder.decode(value, { stream: true });
+            fullResponse += chunk;
+            
+            // Update the message with formatted text
+            streamingText.innerHTML = fullResponse.replace(/\n/g, '<br>');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return reader.read().then(processText);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        removeTypingIndicator();
+        return "Sorry, I encountered an error processing your request. Please try again.";
+    });
+}
 
 
 
@@ -619,7 +713,7 @@ exportButton.classList.add('opacity-50', 'cursor-not-allowed');
             console.log("func generate report called");
             
             for(let i = 8; i < 11; i++) {
-                console.log('current value is' + i);
+                console.log('curren valuet is' + i);
                 current_prompt = button_prompts[i];
                 all_prompts = all_prompts + (i-7) + "- " + current_prompt + '\n\n';
                 console.log("current_prompt", current_prompt);

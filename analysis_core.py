@@ -7,7 +7,7 @@ import os
 def run_full_analysis(image_path, dxf_path):
 
     print("calllllllllllllllled ")
-    seg_model = YOLO("best.pt")
+    seg_model = YOLO("best-3.pt")
     det_model = YOLO("final_detection.pt")
 
     img = cv2.imread(image_path)

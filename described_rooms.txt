@@ -1,90 +1,90 @@
 === ROOM_1 ===
 
 
-- Type: Living Room
+- Type: Bedroom
 
 
-- Area: 81956.61 square units
+- Area: 13674884.89 square units
 
 
-- Bounding Box: (2522.82, 7052.46) to (2748.52, 7441.72)
+- Bounding Box: (3052.58, 1082.51) to (7526.61, 4327.02)
 
 
-- Contains 7 symbol(s):
+- Contains 6 symbol(s):
 
 
-  • sofa at (6585.39, 6933.52), area: 5816268.88
+  • sofa at (6984.05, 1839.0), area: 1316782.95
 
 
-width : 1880.8173988277604 height : 3092.416040792712
+width : 1135.2028265179852 height : 1159.9540553947081
 
 
-  • stairs at (15331.19, 10339.51), area: 1947635.58
+  • furniture at (6466.53, 1368.3), area: 313830.43
 
 
-width : 1147.2986132849328 height : 1697.5850293862095
+width : 592.6426520792438 height : 529.5442426801924
 
 
-  • sofa at (10930.08, 5711.7), area: 4509844.92
+  • door at (7117.6, 3948.78), area: 1166427.79
 
 
-width : 6319.546460061275 height : 713.6344709521627
+width : 1110.1615876977348 height : 1050.6830211908577
 
 
-  • door at (3068.26, 10090.82), area: 2855259.29
+  • door at (3553.4, 2864.47), area: 112187.57
 
 
-width : 2256.980878593313 height : 1265.0792894151982
+width : 325.5361046632461 height : 344.624030950602
 
 
-  • dining_table at (6190.42, 12383.1), area: 16472649.25
+  • bed at (3929.02, 2376.95), area: 2387301.24
 
 
-width : 7617.310465252432 height : 2162.528699855042
+width : 1786.2750358444773 height : 1336.468802954773
 
 
-  • door at (10930.08, 10198.94), area: 4629629.17
+  • door at (3419.85, 2856.07), area: 229847.74
 
 
-width : 2727.1852283002536 height : 1697.5850293862077
-
-
-  • table at (14804.56, 5668.44), area: 680868.94
-
-
-width : 1166.106787273211 height : 583.8827489608611
+width : 651.0722093264912 height : 353.02949512012856
 
 
 - Doors:
 
 
-  • Door at (3068.26, 10090.82)
+  • Door at (7117.6, 3948.78)
 
 
-  • Door at (10930.08, 10198.94)
+  • Door at (3553.4, 2864.47)
+
+
+  • Door at (3419.85, 2856.07)
 
 === ROOM_2 ===
 
 
-- Type: Bathroom
+- Type: Unknown
 
 
-- Area: 4257977.41 square units
+- Area: 4314345.46 square units
 
 
-- Bounding Box: (19751.11, 2467.90) to (22120.94, 4522.30)
+- Bounding Box: (4246.21, 10311.71) to (7000.74, 11891.94)
 
 
 - Contains 1 symbol(s):
 
 
-  • toilet at (20447.01, 3495.1), area: 855967.66
+  • door at (6600.08, 11353.99), area: 1230344.56
 
 
-width : 1297.7640051911549 height : 659.5712534557888
+width : 1143.5499061247356 height : 1075.8994136994406
 
 
-- No doors listed
+- Doors:
+
+
+  • Door at (6600.08, 11353.99)
 
 === ROOM_3 ===
 
@@ -92,119 +92,31 @@ width : 1297.7640051911549 height : 659.5712534557888
 - Type: Unknown
 
 
-- Area: 5003111.25 square units
+- Area: 8787886.37 square units
 
 
-- Bounding Box: (12321.88, 9333.93) to (15124.30, 11161.27)
+- Bounding Box: (4171.08, 7663.99) to (9388.01, 10152.01)
 
 
-- Contains no symbols
+- Contains 2 symbol(s):
 
 
-- No doors listed
-
-=== ROOM_4 ===
+  • stairs at (6583.39, 9555.22), area: 3566427.52
 
 
-- Type: Kitchen
+width : 2946.519101182713 height : 1210.3868404118693
 
 
-- Area: 40058843.04 square units
+  • door at (8728.59, 9630.87), area: 1626615.67
 
 
-- Bounding Box: (22553.53, 2121.90) to (30735.08, 7041.65)
-
-
-- Contains 3 symbol(s):
-
-
-  • hob at (25976.61, 5819.82), area: 4591598.10
-
-
-width : 2670.760706335419 height : 1719.2103163847587
-
-
-  • door at (23418.7, 4435.8), area: 2403177.62
-
-
-width : 2200.5563566284836 height : 1092.0769934267955
-
-
-  • kitchen_sink at (28760.22, 3127.47), area: 4362201.14
-
-
-width : 2068.899138710538 height : 2108.4654823586675
+width : 1343.8798166867327 height : 1210.3868404118693
 
 
 - Doors:
 
 
-  • Door at (23418.7, 4435.8)
-
-=== ROOM_5 ===
-
-
-- Type: Bathroom
-
-
-- Area: 2786216.41 square units
-
-
-- Bounding Box: (11738.83, 7052.46) to (13412.75, 9982.69)
-
-
-- Contains 7 symbol(s):
-
-
-  • stairs at (15331.19, 10339.51), area: 1947635.58
-
-
-width : 1147.2986132849328 height : 1697.5850293862095
-
-
-  • bathroom_sink at (13676.07, 13950.93), area: 2318373.99
-
-
-width : 2256.980878593311 height : 1027.2011324311443
-
-
-  • door at (27180.34, 7430.91), area: 731914.15
-
-
-width : 1109.6822653083764 height : 659.571253455787
-
-
-  • door at (30001.56, 9907.0), area: 763028.54
-
-
-width : 1260.147657214602 height : 605.5080359594122
-
-
-  • bed at (26239.93, 9496.12), area: 3892424.10
-
-
-width : 2482.678966452644 height : 1567.8333073949052
-
-
-  • bed at (19205.67, 9993.5), area: 4387423.37
-
-
-width : 2520.2953144292005 height : 1740.835603383306
-
-
-  • toilet at (18246.46, 13713.05), area: 3671976.96
-
-
-width : 2294.5972265698692 height : 1600.2712378927317
-
-
-- Doors:
-
-
-  • Door at (27180.34, 7430.91)
-
-
-  • Door at (30001.56, 9907.0)
+  • Door at (8728.59, 9630.87)
 
 Abatement:
-The total number of rooms detected in this house is 5.
+The total number of rooms detected in this house is 3.
