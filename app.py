@@ -27,6 +27,7 @@ from PyPDF2 import PdfReader
 import time
 import threading
 
+
 from reportlab.lib.pagesizes import letter, A4
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -50,6 +51,16 @@ pdfmetrics.registerFont(TTFont('Amiri', 'Amiri-Regular.ttf'))
 from vec_reporting import run_query as report_run_query
 from vec_reporting import list_available_templates, process_templates, reset_agent
 
+from pdf2image import convert_from_path
+from ultralytics import YOLO
+
+print("some importa have been made ! ")
+
+from collections import defaultdict
+from run_extraction import run_extraction
+from tesseract import check_context
+ 
+
 app = Flask(__name__)
 
 # Add curriculum folder to your existing folders
@@ -67,7 +78,6 @@ embedding_model = SentenceTransformer('sentence-transformers/paraphrase-multilin
 # Set your OpenAI API key - IMPORTANT: Use environment variable in production
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
-# === Config ===
 UPLOAD_FOLDER = 'uploads'
 IMAGE_FOLDER = 'converted_images'
 TEMPLATE_FOLDER = 'my_templates'
@@ -681,13 +691,10 @@ def generate_summary():
     try:
         data = request.get_json()
         filename = data.get('filename')
-       
         if not filename or filename not in uploaded_documents:
             return jsonify({'error': 'Document not found'}), 404
-       
         document_content = uploaded_documents[filename]
         query = f"Generate a summary of this document: {document_content}"
-       
         summary = report_run_query(query)
        
         return jsonify({
@@ -763,12 +770,238 @@ def check_violations():
 
     return Response(stream_with_context(generate()), content_type='text/plain')
 
+# def view_image(image, title, mask=False):
+#     if not mask:
+#         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+#     save_path = f"temp_{title}.png"
+#     cv2.imwrite(save_path, cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
+#     print(f"Image saved to {save_path}")
+def add_label(img, text, x, y):
+    fontFace = cv2.FONT_HERSHEY_SIMPLEX
+    fontScale = 1.5
+    color = (255, 0, 0)  # Green color (BGR)
+    thickness = 2
+    lineType = cv2.LINE_AA
+    org = (x, y)
+    cv2.putText(img, text, org, fontFace, fontScale, color, thickness, lineType)
+
+def run_inference(img_display, img_original):
+    """
+    Run inference on image
+    img_display: image copy for drawing rectangles 
+    img_original: clean image kept for cropping (not modified)
+    """
+    global signatures_arr
+    global text_arr
+    global image_count  
+    global sig_model
+    image_count += 1
+    print("current image", image_count)
+    
+    # Run model on the display image (but could use original too)
+    results = sig_model(img_display)[0]
+    
+    for box in results.boxes:
+        app_flg = False
+        box_class = box.cls[0].cpu().numpy().astype(int)
+        print("box class", box_class)
+        if box_class:
+            app_flg = True
+        box_conf = box.conf[0]
+        xyxy = box.xyxy[0].cpu().numpy().astype(int)
+        print(f"class {box_class} --- confidence {box_conf} --- xyxy {xyxy}")
+        color = (0, 255, 0)
+        
+        if xyxy is not None and len(xyxy) >= 4:
+            top_left = (int(xyxy[0]), int(xyxy[1]))
+            bottom_right = (int(xyxy[2]), int(xyxy[3]))
+            if box_class == 1:
+                color = (0, 0, 255)
+            
+            # Draw ONLY on the display copy, not the original
+            cv2.rectangle(img_display, top_left, bottom_right, color, 2)
+            label = classes_arr[box_class]
+            add_label(img_display, label, top_left[0], top_left[1])
+            
+            if app_flg:
+                signatures_arr.append([top_left, bottom_right, image_count])
+            else:
+                text_arr[image_count].append((top_left, bottom_right))
+
+classes_arr = ['human_text', 'signature']
+sig_model = YOLO('human_sig_weight_final.pt')
+image_count = 0 
+signatures_arr = [] 
+text_arr = defaultdict(list)
+pdf_sig_path = ''
+
+@app.route('/upload_signature_pdf', methods=['POST'])
+def on_upload():
+    global pdf_sig_path
+    print("images upload signature path >>>> ")
+    pdf_file = request.files['pdf']
+    pdf_path = os.path.join(app.config['UPLOAD_FOLDER'], pdf_file.filename)
+    pdf_sig_path = pdf_path
+    print("image path >>", pdf_path)
+    pdf_file.save(pdf_path)
+    images_from_pdf = convert_from_path(pdf_path)
+    images_folder = os.path.join('static', 'images')
+    
+    if os.path.exists(images_folder):
+        print("removing previous images folder >> ")
+        shutil.rmtree(images_folder)
+    else: 
+        print("images folder was never present")
+    
+    os.makedirs(images_folder, exist_ok=True)
+    print("created images folder")
+    
+    image_init_name = pdf_file.filename[:-4]
+    images_dict = {}
+    
+    for idx, img in enumerate(images_from_pdf):
+        im_name = image_init_name + '_' + str(idx) + ".png"
+        im_path = os.path.join(images_folder, im_name)
+        cv2.imwrite(im_path, cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR))
+        images_dict[idx] = im_path
+    
+    print("returning the image path >>>>", images_dict)
+    return jsonify(images_dict)
+
+@app.route('/run_signature_pdf', methods=["POST"])
+def detect_signatures():
+    global classes_arr, signatures_arr, text_arr, image_count, sig_model
+    image_count = 0
+    signatures_arr = []
+    text_arr = defaultdict(list)
+    
+    print("detect signature function called")
+    
+    # Get images from the static/images folder
+    images_folder = os.path.join('static', 'images')
+    image_files = sorted(os.listdir(images_folder))  # Sort to maintain order
+    
+    # IMPORTANT: Store CLEAN originals for cropping
+    original_images = []  
+    
+    detection_images = []
+    extracted_signatures = []
+    llm_detection_images = []
+
+    for img_file in image_files:
+        img_path = os.path.join(images_folder, img_file)
+        
+        # Read the original image
+        img_original = cv2.imread(img_path)
+        original_images.append(img_original.copy())  # Store clean copy
+        
+        # Create a display copy for drawing rectangles
+        img_display = img_original.copy()
+        
+        # Run inference (draws on display copy only)
+        run_inference(img_display, img_original)
+        
+        # Save the display image with rectangles
+        detection_path = f'static/detection_{image_count-1}.png'
+        cv2.imwrite(detection_path, img_display)
+        detection_images.append(f'/static/detection_{image_count-1}.png')
+    
+    print("checking signatures array")
+    
+    if signatures_arr:
+        print("going through the signatures array now")
+        sig_names = assign_names(signatures_arr)
+        
+        for idx, elem in enumerate(signatures_arr):
+            top_left = elem[0]
+            bottom_right = elem[1]
+            img_idx = elem[2] - 1
+            
+            # IMPORTANT: Crop from CLEAN original, not the one with rectangles
+            clean_image = original_images[img_idx]
+            cropped_sig = clean_image[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
+            
+            print("feeding to segmentation model")
+            # RUN YOUR EXTRACTION MODEL on clean cropped image
+            mask = run_extraction(cropped_sig)
+            
+            sig_path = f'static/signature_{idx}.png'
+            mask_path = f'static/mask_{idx}.png'
+            cv2.imwrite(sig_path, cropped_sig)
+            cv2.imwrite(mask_path, mask * 255)  # Convert mask to visible image
+            extracted_signatures.append(f'/static/mask_{idx}.png')
+    else:
+        # LLM FALLBACK - Using clean originals
+        print("cant find signatures --- defaulting to LLM instead!")
+        print('*' * 10)
+        print("pdf sign path >>", pdf_sig_path)
+        res = check_context(text_arr, pdf_sig_path)
+        sig_map = sig_out_to_map(res)
+        
+        for key in sig_map.keys():
+            # Create display copy for LLM visualization
+            img_display = original_images[key-1].copy()
+            print("key >>", key)
+            text_box_indices = sig_map[key]
+            
+            for id, i in enumerate(text_box_indices):
+                top_left, bottom_right = text_arr[key][i]
+                
+                # Draw rectangle on display copy
+                cv2.rectangle(img_display, top_left, bottom_right, (0, 255, 0), 2)
+                
+                # Crop from CLEAN original
+                clean_image = original_images[key-1]
+                cropped_sig = clean_image[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
+                
+                # Run extraction on clean cropped image
+                mask = run_extraction(cropped_sig)
+                mask_path = f'static/mask_llm_{key}_{id}.png'
+                cv2.imwrite(mask_path, mask * 255)
+                extracted_signatures.append(f'/static/mask_llm_{key}_{id}.png')
+            
+            # Save the LLM detection visualization
+            llm_path = f'static/llm_detection_{key}.png'
+            cv2.imwrite(llm_path, img_display)
+            llm_detection_images.append(f'/static/llm_detection_{key}.png')
+    
+    return jsonify({
+        'status': 'ok',
+        'detection_images': detection_images,
+        'signatures': extracted_signatures,
+        'llm_sigs': llm_detection_images  # Will be non-empty if LLM was used
+    })
+
+def sig_out_to_map(sig_array):
+    sig_map = defaultdict(list)
+    for signature in sig_array:
+        sig_map[signature[0]].append(signature[1])
+    return sig_map
+
+def assign_names(sig_array):
+    print("cur signatures arrayy >>> " , sig_array)
+    names_arr = [0] * len(sig_array)
+    prefix = "image"
+    first_num = curr_num =  sig_array[0][2]
+    second_num = 1
+    for idx,elem in enumerate(sig_array):
+        print("idx " , idx)
+        if elem[2] == curr_num:
+            second_num+=1
+        else:
+            first_num+=1
+            second_num = 1
+            curr_num = elem[2]
+        names_arr[idx] = prefix + "_" + str(first_num) + str(second_num)
+    return names_arr
+
+
+
+
 @app.route('/generate_smart_report', methods=["POST"])
 def generate_smart():
     print("getting smart!")
-
     queries_dict = {}
-
     data = request.get_json()
     query = data['smart_query']
     print("backend recieved the smart query ")

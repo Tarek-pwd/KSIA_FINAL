@@ -3,4 +3,5 @@
 # Ignore the .env file
 .env
 uploads
-
+.png
+.pth
