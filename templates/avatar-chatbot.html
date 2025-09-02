@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avatar Chatbot - KSIA Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#001f3f',
+                        'primary-hover': '#001633',
+                        'primary-light': '#e6f3ff',
+                        'accent': '#0066cc',
+                        'accent-light': '#3399ff',
+                        'accent-dark': '#004499',
+                        'success': '#10b981',
+                        'warning': '#f59e0b',
+                        'danger': '#ef4444',
+                        'dark': '#0f172a',
+                        'light': '#f8fafc',
+                        'avatar': '#ef4444',         /* red for avatar */
+                        'avatar-dark': '#dc2626'     /* dark red */
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'fade-in': 'fadeIn 0.8s ease-out',
+                        'scale-in': 'scaleIn 0.6s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'shimmer': 'shimmer 2s linear infinite'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+       
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-bg {
+            background-color: #001f3f;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .video-container {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .video-placeholder {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen font-sans">
+
+    <!-- Header -->
+    <header class="relative z-10 animate-slide-up">
+        <div class="container mx-auto px-6 py-6">
+            <div class="flex items-center justify-between">
+                <!-- Back button and title -->
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="flex items-center space-x-2 text-white hover:text-blue-200 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                        <!-- Increased font size here -->
+                        <span class="text-xl font-semibold">Back to Services</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <div style="max-width: 1200px; margin-left: 158px;">
+
+
+            
+            <!-- Video Section -->
+            <div class="glass-card rounded-3xl p-6 animate-fade-in" 
+            style="width: 950px; padding: 30px; margin-top: 0; margin-left: 0;">
+       
+                <div class="mb-4">
+                    <h2 class="text-2xl font-bold text-white mb-2">Avatar Assistant</h2>
+                    <p class="text-blue-100">Interact with your AI avatar in real-time</p>
+                </div>
+                
+                <!-- Video Container -->
+                <div class="video-container mb-4">
+                    <video 
+                        id="avatarVideo"
+                        class="w-full h-full object-contain" 
+                        controls
+                        preload="metadata"
+                        poster="/static/Screenshot 1447-03-03 at 2.45.45 PM.png"
+                    >
+                        <source src="/static/videos/je9jUBpTBW4xUzK.MP4" type="video/mp4">
+                        <!-- <source src="/static/videos/avatar-video.webm" type="video/webm"> -->
+                        <!-- Fallback content -->
+                        <div class="video-placeholder">
+                            <div class="text-center">
+                                <div class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-4 mx-auto">
+                                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                </div>
+                                <p class="text-white text-lg">Avatar Video Not Found</p>
+                                <p class="text-blue-200 text-sm">Please add your video file to /static/videos/</p>
+                            </div>
+                        </div>
+                    </video>
+                </div>
+
+                <!-- Video Controls -->
+                <div class="flex justify-center space-x-4">
+                    <button id="playPauseBtn" class="bg-avatar hover:bg-avatar-dark text-white px-6 py-2 rounded-lg transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h8m-7 0h6"/>
+                        </svg>
+                    </button>
+                    <button id="muteBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/>
+                        </svg>
+                    </button>
+                    <button id="fullscreenBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        const video = document.getElementById('avatarVideo');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+        // Video controls
+        playPauseBtn.addEventListener('click', () => {
+            if (video.paused) {
+                video.play();
+            } else {
+                video.pause();
+            }
+        });
+
+        muteBtn.addEventListener('click', () => {
+            video.muted = !video.muted;
+        });
+
+        fullscreenBtn.addEventListener('click', () => {
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            }
+        });
+
+        // Initialize video placeholder if no video source
+        video.addEventListener('error', () => {
+            video.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
