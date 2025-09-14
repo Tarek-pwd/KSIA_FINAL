@@ -7,161 +7,109 @@ load_dotenv()
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
-schema_markdown = '''# HR Database Schema
 
+schema_markdown = '''# HR Database Schema
 ## Tables
 
-### `employees` *contains basic employee information* columns:
-- `emp_id` (PK, INT AUTO_INCREMENT) → unique identifier for each employee
-- `first_name` (VARCHAR(50), NOT NULL) → employee first name
-- `last_name` (VARCHAR(50), NOT NULL) → employee last name
-- `phone` (VARCHAR(20)) → contact phone number
-- `email` (VARCHAR(100), UNIQUE) → unique email address
-- `nationality` (VARCHAR(50)) → employee nationality
-- `flight_cost` (DECIMAL(12,2)) → cost associated with business travel
-- `iqama_expiry_date` (DATE) → residency permit expiration date
-- `hiring_date` (DATE, NOT NULL) → date the employee was hired
-- `gender` (ENUM('Male','Female')) → employee gender. Distinct values include ['Male','Female']
-- `dob` (DATE, NOT NULL) → date of birth
-- `job_position` (VARCHAR(100)) → current job title
-- `status` (ENUM('Active','Inactive','Terminated'), DEFAULT 'Active') → current employment status. Distinct values include ['Active','Inactive','Terminated']
-- `manager_id` (INT, FK → Employee.emp_id) → the id of the direct manager of an employee
-- `department_id` (INT, FK → Department.department_id) → the id of the department of an employee
+### `employees` *merges Employee, Department, Legal* columns:
+- `emp_id` (PK INT AUTO_INCREMENT) → unique identifier for each employee  
+- `first_name` (VARCHAR(50) NOT NULL) → first name of employee
+- `last_name` (VARCHAR(50) NOT NULL) → last name of employee
+- `phone` (VARCHAR(20)) → contact phone number of employee
+- `email` (VARCHAR(100) UNIQUE) → unique email address of employee
+- `nationality` (VARCHAR(50)) → employee nationality  
+- `flight_cost` (DECIMAL(12,2)) → cost associated with business travel for each employee
+- `iqama_expiry_date` (DATE) → residency permit expiry date for each employee
+- `hiring_date` (DATE NOT NULL) → date employee was hired  
+- `gender` (ENUM('Male','Female')) → employee gender. Distinct values include ['Male','Female']  
+- `dob` (DATE NOT NULL) → date of birth of employee
+- `job_position` (VARCHAR(100)) → current job title of employee
+- `status` (ENUM('Active','Inactive','Terminated') DEFAULT 'Active') → employment status of each employee. Distinct values include ['Active','Inactive','Terminated']  
+- `manager_id` (INT) → id of manager managing each employee. Foreign key to Employee.emp_id for direct manager  
+- `department` (ENUM('HR','IT','Marketing','Operations','Sales') NOT NULL) → department name of each employee. Distinct values include ['HR','IT','Marketing','Operations','Sales']  
+- `contract_type` (ENUM('Definite','Indefinite') NOT NULL) → contract type of each employee. Distinct values include ['Definite','Indefinite']  
+- `actual_wage` (DECIMAL(12,2) NOT NULL) → wage of each employee used for end of service calculation  
+- `years_service` (INT DEFAULT 0) → years of service of each employee
+- `months_service` (INT DEFAULT 0) → months of service of each employee  
+- `days_service` (INT DEFAULT 0) → days of service of each employee
+- `termination_reason` (ENUM(
+  'Resignation',
+  'The termination of the contract by the employer for an unlawful reason',
+  'Death of the employee',
+  'Termination of the contract pursuant Article (81)',
+  'Agreement to Terminate'
+)) → reason for termination for each employee. Distinct values include ['Resignation', 'The termination of the contract by the employer for an unlawful reason', 'Death of the employee', 'Termination of the contract pursuant Article (81)', 'Agreement to Terminate']
 
+### `salaries` *merges Salary_Current, Salary_History* columns:
+- `emp_id` (PK INT) → id of each employee which is foreign key to Employee.emp_id  
+- `salary_2022` (DECIMAL(12,2)) → salary of each employee for year 2022
+- `salary_2023` (DECIMAL(12,2)) → salary of each employee for year 2023  
+- `salary_2024` (DECIMAL(12,2)) → salary of each employee for year 2024  
+- `base_salary_2025` (DECIMAL(12,2) NOT NULL) → base salary of each employee for year 2025  
+- `housing_allowance_2025` (DECIMAL(12,2) DEFAULT 0) → housing allowance of each employee for year 2025  
+- `transport_allowance_2025` (DECIMAL(12,2) DEFAULT 0) → transport allowance of each employee for year 2025  
+- `total_salary_2025` (DECIMAL(12,2) STORED) → total salary of each employee computed as base_salary_2025 + housing_allowance_2025 + transport_allowance_2025
 
-### `departments` *contains department assignments for each employee* columns:
-- `emp_id` (INT, PK, FK → Employee.emp_id) → id of the employee
-- `department_id` (INT, UNIQUE, NOT NULL) → unique department identifier
-- `name` (ENUM('HR','IT','Marketing','Operations','Sales'), NOT NULL) → the department name. Distinct values include ['HR','IT','Marketing','Operations','Sales']
+### `attendance` *merges Attendance, Leaves, Yearly_Absences* columns:
+- `attendance_id` (PK INT AUTO_INCREMENT) → unique attendance record id  
+- `emp_id` (INT NOT NULL) → id of each employee which is foreign key to Employee.emp_id  
+- `att_date` (DATE) → attendance date for each employee
+- `check_in` (DATETIME) → checkin timestamp for each employee for that att_date 
+- `check_out` (DATETIME) → checkout timestamp for each employee for that att_date
+- `attendance_status` (ENUM('Present','Absent','On Leave') NOT NULL DEFAULT 'Present') → attendance status of each employee. Distinct values include ['Present','Absent','On Leave']  
+- `leave_type` (ENUM('Sick','Holiday','Maternity')) → leave type for each employee if they are "Absent" or "On Leave". Distinct values include ['Sick','Holiday','Maternity']  
+- `allocated_days` (INT) → leave days allocated for employee leave
+- `used_days` (INT DEFAULT 0) → leave days used by employee
+- `remaining_days` (INT VIRTUAL) → leave days left for employee computed as allocated_days minus used_days  
+- `leave_status` (ENUM('Pending','Approved','Rejected') NOT NULL DEFAULT 'Pending') → leave approval status for employee. Distinct values include ['Pending','Approved','Rejected']  
+- `yearly_absence_2022` (INT CHECK (yearly_absence_2022 BETWEEN 0 AND 22)) → absences of each employee in year 2022. Distinct values range from 0 to 22  
+- `yearly_absence_2023` (INT CHECK (yearly_absence_2023 BETWEEN 0 AND 22)) → absences of each employee in year 2023. Distinct values range from 0 to 22  
+- `yearly_absence_2024` (INT CHECK (yearly_absence_2024 BETWEEN 0 AND 22)) → absences of each employee in year 2024. Distinct values range from 0 to 22
 
+### `rating` *stores annual performance ratings* columns:
+- `rate_id` (PK INT AUTO_INCREMENT) → unique rating record id  
+- `emp_id` (INT NOT NULL) → id of each employee which is foreign key to Employee.emp_id  
+- `rate_2022` (INT CHECK (rate_2022 BETWEEN 1 AND 5)) → rating of each employee in year 2022. Distinct values include [1,2,3,4,5]  
+- `rate_2023` (INT CHECK (rate_2023 BETWEEN 1 AND 5)) → rating of each employee in year 2023. Distinct values include [1,2,3,4,5]  
+- `rate_2024` (INT CHECK (rate_2024 BETWEEN 1 AND 5)) → rating of each employee in year 2024. Distinct values include [1,2,3,4,5]
 
-
-### `attendance` *records daily attendance of days and check in check out timestamps for each employee* columns:
-- `attendance_id` (PK, INT AUTO_INCREMENT) → unique attendance record id
-- `emp_id` (INT, NOT NULL, FK → Employee.emp_id) → employee id
-- `att_date` (DATE, NOT NULL) → date of attendance of an employee
-- `check_in` (DATETIME) → check in timestamp of an employee
-- `check_out` (DATETIME) → check out timestamp of an employee
-- `status` (ENUM('Present','Absent','On Leave'), NOT NULL, DEFAULT 'Present') → attendance status of an employee. Distinct values include ['Present','Absent','On Leave']
-
-
-
-### `leaves` *tracks leave allocations and usages for each employee* columns:
-- `leaves_id` (PK, INT AUTO_INCREMENT) → unique leave record id
-- `emp_id` (INT, NOT NULL, FK → Employee.emp_id) → employee id
-- `leave_type` (ENUM('Sick','Holiday','Maternity'), NOT NULL) → type of leave. Distinct values include ['Sick','Holiday','Maternity']
-- `allocated_days` (INT, NOT NULL) → total leave days allocated for each employee
-- `used_days` (INT, NOT NULL, DEFAULT 0) → leave days used by each employee
-- `remaining_days` (INT, VIRTUAL) → computed as allocated_days minus used_days for each employee
-- `status` (ENUM('Pending','Approved','Rejected'), NOT NULL, DEFAULT 'Pending') → approval status for each employee. Distinct values include ['Pending','Approved','Rejected']
-
-
-### `debts` *contains employee debts and repayment* columns:
-- `debt_id` (PK, INT AUTO_INCREMENT) → unique debt record id
-- `emp_id` (INT, NOT NULL, FK → Employee.emp_id) → employee id
-- `total_debt` (DECIMAL(14,2), NOT NULL) → total debt amount for each employee
-- `remaining_debt` (DECIMAL(14,2), NOT NULL) → remaining debt for each employee
-- `debt_date` (DATE, NOT NULL) → date debt recorded for each employee
-- `due_date` (DATE, NOT NULL) → debt due date for each employee
-- `status` (ENUM('Pending','Paid','Overdue'), NOT NULL, DEFAULT 'Pending') → debt status for each employee. Distinct values include ['Pending','Paid','Overdue']
-- `payment_per_month` (DECIMAL(12,2)) → scheduled monthly payment
+### `extras` *merges Benefits, Debt* columns:
+- `extras_id` (PK INT AUTO_INCREMENT) → unique extras record id  
+- `emp_id` (INT NOT NULL) → employee id which is foreign key to Employee.emp_id  
+- `healthcare_insurance_class` (VARCHAR(50)) → health plan classification for each employee 
+- `healthcare_insurance_type` (ENUM('Medgulf','Tawuniya','Bupa')) → insurance provider for each employee. Distinct values include ['Medgulf','Tawuniya','Bupa']  
+- `childcare_insurance` (BOOLEAN DEFAULT FALSE) → childcare coverage eligibility for each employee 
+- `car` (BOOLEAN DEFAULT FALSE) → company car eligibility for each employee
+- `gadgets` (ENUM('laptop','phone','tablet')) → provided gadget for each employee. Distinct values include ['laptop','phone','tablet']  
+- `housing` (BOOLEAN DEFAULT FALSE) → housing allowance eligibility for each employee
+- `total_debt` (DECIMAL(14,2)) → total debt amount for each employee 
+- `remaining_debt` (DECIMAL(14,2)) → remaining debt balance for each employee
+- `debt_date` (DATE) → debt record date for each employee
+- `due_date` (DATE) → debt due date for each employee
+- `debt_status` (ENUM('Pending','Paid','Overdue') DEFAULT 'Pending') → debt status for each employee. Distinct values include ['Pending','Paid','Overdue']  
+- `payment_per_month` (DECIMAL(12,2)) → scheduled monthly payment for reach employee  
 - `interest_rate` (DECIMAL(5,2)) → annual interest rate percent for each employee
 
-
-### `projects` *logs employee project assignments* columns:
-- `project_id` (PK, INT AUTO_INCREMENT) → unique project record id
-- `emp_id` (INT, NOT NULL, FK → Employee.emp_id) → employee id
-- `project_name` (VARCHAR(150), NOT NULL) → name of the project the employee is working on  
-- `start_date` (DATE, NOT NULL) → project start date
-- `end_date` (DATE) → project end date
-- `status` (ENUM('Planned','Active','Completed','On Hold'), NOT NULL, DEFAULT 'Planned') → project state for each employee. Distinct values include ['Planned','Active','Completed','On Hold']
-- `budget` (DECIMAL(14,2)) → allocated budget for each project
-
-
-### `experience` *contains prior work experience for each employee* columns:
-- `experience_id` (PK, INT AUTO_INCREMENT) → unique experience record id
-- `emp_id` (INT, NOT NULL, FK → Employee.emp_id) → employee id
-- `previous_employer` (VARCHAR(150), NOT NULL) → past employer name for each employee
-- `previous_role` (VARCHAR(100), NOT NULL) → past job title for each employee
-- `exp_years` (INT, NOT NULL) → years of experience for each employee
-
-
-### `benefits` *contains employee benefit selections* columns:
-- `benefit_id` (PK, INT AUTO_INCREMENT) → unique benefit record id  
-- `emp_id` (INT, NOT NULL, FK → Employee.emp_id) → employee id  
-- `healthcare_insurance_class` (VARCHAR(50)) → health plan classification  
-- `healthcare_insurance_type` (ENUM('Medgulf','Tawuniya','Bupa')) → insurance provider. Distinct values include ['Medgulf','Tawuniya','Bupa']  
-- `childcare_insurance` (BOOLEAN, NOT NULL, DEFAULT FALSE) → childcare eligibility for each employee  
-- `car` (BOOLEAN, NOT NULL, DEFAULT FALSE) → company car eligibility for each employee  
-- `gadgets` (ENUM('laptop','phone','tablet')) → provided gadget for each employee. Distinct values include ['laptop','phone','tablet']  
-- `housing` (BOOLEAN, NOT NULL) → housing allowance eligibility  for each employee
-
-
-### `salaries` *contains salaries for each employee* columns:
-- `salary_id` (PK, INT AUTO_INCREMENT) → unique salary record id
-- `emp_id` (INT, NOT NULL, FK → Employee.emp_id) → employee id
-- `base_salary` (DECIMAL(12,2), NOT NULL) → fixed salary amount for each employee
-- `housing_allowance` (DECIMAL(12,2), DEFAULT 0) → housing component of the salary for each employee
-- `transport_allowance` (DECIMAL(12,2), DEFAULT 0) → transport component of the salary for each employee
-- `total_salary` (DECIMAL(12,2), STORED) → computed as base_salary plus housing_allowance plus transport_allowance
-
-
-
-### `end_of_service` *contains end of service and contract details for each employee* columns:
-- `eos_id` (PK, INT AUTO_INCREMENT) → unique end of service record id
-- `emp_id` (INT, NOT NULL, FK → Employee.emp_id) → employee id
-- `contract_type` (ENUM('Definite','Indefinite'), NOT NULL) → contract type. Distinct values include ['Definite','Indefinite']
-- `actual_wage` (DECIMAL(12,2), NOT NULL) → final wage used for EOS calculation for each employee
-- `years_service` (INT, DEFAULT 0) → years of service for each employee
-- `months_service` (INT, DEFAULT 0) → months of service for each employee
-- `days_service` (INT, DEFAULT 0) → days of service for each employee
-- `termination_reason` (ENUM(
-    'Resignation',
-    'The termination of the contract by the employer for an unlawful reason',
-    'Death of the employee',
-    'Termination of the contract pursuant Article (81)',
-    'Agreement to Terminate'
-  ), NOT NULL) → reason for termination. Distinct values include ['Resignation','The termination of the contract by the employer for an unlawful reason','Death of the employee','Termination of the contract pursuant Article (81)','Agreement to Terminate']
-
-
-### `salary_history` *contains annual salary history for each employee for three years* columns:
-- `salary_id` (PK, INT AUTO_INCREMENT) → unique salary history record id  
-- `emp_id` (INT, NOT NULL, FK → Employee.emp_id) → employee id  
-- `salary_2022` (DECIMAL(12,2)) → salary for year 2022 for each employee
-- `salary_2023` (DECIMAL(12,2)) → salary for year 2023  for each employee
-- `salary_2024` (DECIMAL(12,2)) → salary for year 2024  for each employee
-
-### `yearly_absences` *records yearly absence counts for three years per employee* columns:
-- `absence_id` (PK, INT AUTO_INCREMENT) → unique absence record id  
-- `emp_id` (INT, NOT NULL, FK → Employee.emp_id) → employee id  
-- `absence_2022` (INT, CHECK (absence_2022 BETWEEN 0 AND 22)) → absences in 2022 for each employee. Distinct values range from 0 to 22  
-- `absence_2023` (INT, CHECK (absence_2023 BETWEEN 0 AND 22)) → absences in 2023 for each employee. Distinct values range from 0 to 22  
-- `absence_2024` (INT, CHECK (absence_2024 BETWEEN 0 AND 22)) → absences in 2024 for each employee. Distinct values range from 0 to 22  
-
-### `employee_ratings` *stores annual performance ratings for three years per employee* columns:
-- `rate_id` (PK, INT AUTO_INCREMENT) → unique rating record id  
-- `emp_id` (INT, NOT NULL, FK → Employee.emp_id) → employee id  
-- `rate_2022` (INT, CHECK (rate_2022 BETWEEN 1 AND 5)) → rating for 2022 for each emmployee. Distinct values include [1,2,3,4,5]  
-- `rate_2023` (INT, CHECK (rate_2023 BETWEEN 1 AND 5)) → rating for 2023 for each employee. Distinct values include [1,2,3,4,5]  
-- `rate_2024` (INT, CHECK (rate_2024 BETWEEN 1 AND 5)) → rating for 2024 for each employee. Distinct values include [1,2,3,4,5]  
-
+### `projects_experience` *merges Projects, Experience* columns:
+- `proj_exp_id` (PK INT AUTO_INCREMENT) → unique projectsexperience record id  
+- `emp_id` (INT NOT NULL) → employee id which is foreign key to Employee.emp_id  
+- `project_name` (VARCHAR(150)) → project name of employee
+- `start_date` (DATE) → project start date of employee
+- `end_date` (DATE) → project end date of employee
+- `project_status` (ENUM('Planned','Active','Completed','On Hold') DEFAULT 'Planned') → project state of employee. Distinct values include ['Planned','Active','Completed','On Hold']  
+- `budget` (DECIMAL(14,2)) → project budget of employee
+- `previous_employer` (VARCHAR(150)) → past employer name of employee
+- `previous_role` (VARCHAR(100)) → past job title of employee
+- `exp_years` (INT) → years of prior experience of employee
 
 ## Relationships
 
-1. Employee.manager_id → Employee.emp_id  
-2. Employee.department_id → Department.department_id  
-3. Department.emp_id → Employee.emp_id  
-4. Attendance.emp_id → Employee.emp_id  
-5. Leaves.emp_id → Employee.emp_id  
-6. Debt.emp_id → Employee.emp_id  
-7. Projects.emp_id → Employee.emp_id  
-8. Experience.emp_id → Employee.emp_id  
-9. Benefits.emp_id → Employee.emp_id  
-10. Salary.emp_id → Employee.emp_id  
-11. Legal.emp_id → Employee.emp_id
-12. Salary_History.emp_id → Employee.emp_id  
-13. Yearly_Absences.emp_id → Employee.emp_id  
-14. Rating.emp_id → Employee.emp_id
+1. `employees.manager_id` → `employees.emp_id`  
+2. `salaries.emp_id` → `employees.emp_id`  
+3. `attendance.emp_id` → `employees.emp_id`  
+4. `rating.emp_id` → `employees.emp_id`  
+5. `extras.emp_id` → `employees.emp_id`  
+6. `projects_experience.emp_id` → `employees.emp_id`  
 '''
  
 agent_instructions = f"""
@@ -175,7 +123,7 @@ agent_instructions = f"""
         - You must use a first name and last name in the query that was matched by the RAG tool strictly
         - even if RAG did not give any matches , you should still generate the postgreSQL statment
         - the answer should start with the word 'sql' and always be  a valid sql statament .  This is strict because it will be passed to a sql engine'
-        - Even if the answer is something like 'Hello! How can I assist you with your HR database queries today?' you should give it as "sql select 'hello ....'"
+        - Even if the answer is something like 'Hello! How can I assist you with your HR database queries today?' you should give it as "sql select 'hello .... with no \n characters'"
         - If you are given more than one question they will be structured , so I will tell you which is which
         - In the case of more than one  question , generate a seperate SQL statement for every question please and as mentioned , the world 'sql' should always be before every reponse 
         """
