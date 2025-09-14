@@ -48,15 +48,12 @@ def run_query(query: str):
         try:
             response_data = json.loads(result.stdout)
             if response_data['status'] == 'success':
-
                 response = response_data['response']
                 print("recieved resposne +++++++++++++++++" , response)
                 executed_q_result = execute_query(clean_sql(response))
                 print("final result",executed_q_result)
                 return executed_q_result
             
-            
-
             else:
                 return f"Error: {response_data['response']}"
         except json.JSONDecodeError:

@@ -1,17 +1,14 @@
-
-"""
-Subprocess executor for Vectara queries
-This runs in a completely separate process to avoid state conflicts -- 
-"""
-
-import sys
-import json
-from vectara_agentic.tools import VectaraToolFactory
-from vectara_agentic.agent import Agent
-from pydantic import Field, BaseModel
+import openai
+from query_database import execute_query
+from vec_agentic import clean_sql
 import os
+from dotenv import load_dotenv
+load_dotenv()
+
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 schema_markdown = '''# HR Database Schema
+
 ## Tables
 
 ### `employees` *contains basic employee information* columns:
@@ -166,38 +163,8 @@ schema_markdown = '''# HR Database Schema
 13. Yearly_Absences.emp_id → Employee.emp_id  
 14. Rating.emp_id → Employee.emp_id
 '''
-
-
-def execute_query(query):
-    try:
-        # Create Vectara components
-        vec_factory = VectaraToolFactory(
-            vectara_api_key='zut_260-TfMw7QwpbtL5lrro3KUOaJGS-i3QbU8XFg',
-            vectara_corpus_key='HR_demo'
-        )
-        
-        class QueryHRArgs(BaseModel):
-            query: str = Field(..., description="The user query.")
-        
-        query_hr = vec_factory.create_rag_tool(
-            tool_name="query_hr_database",
-            tool_description="Query the content from HR data",
-            tool_args_schema=QueryHRArgs,
-            reranker="multilingual_reranker_v1", 
-            rerank_k=3,
-            n_sentences_before=1,
-            n_sentences_after=1,
-            lambda_val=0.005,
-            summary_num_results=10,
-            vectara_summarizer='vectara-summary-table-md-query-ext-jan-2025-gpt-4o',
-            include_citations=False,
-            verbose=False
-        )
-
-        ## subsequential workflow
-
-        
-        agent_instructions = f"""
+ 
+agent_instructions = f"""
         - You are a an expert PostgreSQL assistant that generates prompts based on the schema markdown.
         - Thew database you are creating queries for is employyes datra consiting of many tables 
         - Be sure to give statemnts that would combine different tables together when needed
@@ -212,25 +179,54 @@ def execute_query(query):
         - If you are given more than one question they will be structured , so I will tell you which is which
         - In the case of more than one  question , generate a seperate SQL statement for every question please and as mentioned , the world 'sql' should always be before every reponse 
         """
-        
-        agent = Agent(
-            tools=[query_hr],
-            topic="SQL query generator",
-            custom_instructions=agent_instructions,
-            verbose=False
+messages_arr = [{"role" : "system" , "content" : agent_instructions }]
+def query_gpt(prompt):
+    add_message("user",prompt)
+    response = openai.chat.completions.create(
+        model = 'gpt-4o',
+        messages = messages_arr  
         )
-        
-        response = agent.chat(query)
-        return {"status": "success", "response": str(response)}
-        
-    except Exception as e:
-        return {"status": "error", "response": str(e)}
+    llm_reply = response.choices[0].message.content
+    add_message('assistant',llm_reply)
+    res = execute_query(clean_sql(llm_reply))
+    print("the result is >> " , res)
 
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print(json.dumps({"status": "error", "response": "No query provided"}))
-        sys.exit(1)
+    final_res = reasoning(messages_arr,res)
+    return final_res
     
-    query = sys.argv[1]
-    result = execute_query(query)
-    print(json.dumps(result))
+def add_message(poster,content):
+    print("befpre messages arrayt >> " , messages_arr[1:])
+    new_elem = {"role" : poster , "content" : content}
+    messages_arr.append(new_elem)
+    print("after appending  elem" , messages_arr[1:])
+
+
+
+def reasoning(chat_history, current_answer):
+    print("user last question" ,chat_history[-2])
+    print("llm last reply" ,chat_history[-1])
+
+    reasoning_instructions = """
+another model beforeyou generated a  sql statement based on the user data . and then the code execurted the statemnt to get the result which is all numbers or
+the results of sql queroes , you just need to take this as well as the answer and put in a sentence to be presented in a better way
+
+sometimes a scenario would happen where the user would ask a normal uestion not realted to the SQL database , in which case the LLM repliy is something like 
+sql select 'Hello! How can I assist you with your HR database queries today?' in such cases , just return the same answer the previous model got  which will be Hello! How can I assist you with your HR database queries today? in such case .
+"""
+
+    response = openai.chat.completions.create(
+        model = 'gpt-4o', 
+        messages = [
+        {"role" : "system" , "content" : reasoning_instructions },
+        {"role" : "user" , "content" : f"""the last user question was {chat_history[-2]['content']} . the last llm reply was {chat_history[-1]['content']} . 
+         the current answer to the user's questions is {current_answer} now write your sentence based on all of these information please """}
+
+    ])
+
+    return response.choices[0].message.content
+
+
+
+    
+
+

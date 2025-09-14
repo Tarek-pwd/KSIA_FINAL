@@ -718,6 +718,8 @@ def generate_summary():
 
 # ========== OTHER EXISTING ROUTES ==========
 
+
+from hr_NO_VECTARA import query_gpt
 @app.route('/ask_HR', methods=["POST"])
 def ask_hr_bot():
     try:
@@ -729,7 +731,7 @@ def ask_hr_bot():
         print(f"Backend processing message: {message}")
        
         # Run the query
-        response = run_query(message)
+        response = query_gpt(message)
         print(f"Backend generated response: {response}")
        
         return jsonify({
