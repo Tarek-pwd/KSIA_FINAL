@@ -11,9 +11,7 @@ from vectara_agentic.agent import Agent
 from pydantic import Field, BaseModel
 import os
 
-
 schema_markdown = '''# HR Database Schema
-
 ## Tables
 
 ### `employees` *merges Employee, Department, Legal* columns:

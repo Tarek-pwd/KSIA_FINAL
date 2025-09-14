@@ -14,6 +14,7 @@ api_key = os.getenv("OPENAI_API_KEY")
 openai = OpenAI(api_key=api_key)
 all_words = []
 keys_of_interest = ['block_num','left','top','width','height' ,'text']
+
 def plot_boxes(curr_elem_idx,img):
     for elem in all_words[curr_elem_idx:]:
         pt1 = (elem['left'], elem['top'])
@@ -28,7 +29,6 @@ def show_img(img):
         if cv2.waitKey(1) == 27:
             break
     cv2.destroyAllWindows() 
-
 
     
 def ask_llm(content):
