@@ -85,6 +85,41 @@
             background: #10b981;
             animation: typing 1.4s infinite;
         }
+
+        /* Enhanced fixed positioning for the logo container */
+        .fixed.top-2.right-6.z-50 {
+            position: fixed !important;
+            top: 8px !important;
+            right: 24px !important;
+            z-index: 9999 !important;
+            transform: translate3d(0, 0, 0) !important;
+            will-change: auto !important;
+            backface-visibility: hidden !important;
+        }
+
+        /* Fix the image positioning within the container */
+        .fixed.top-2.right-6.z-50 img {
+            position: static !important;
+            transform: none !important;
+            display: block !important;
+            max-width: none !important;
+            pointer-events: none !important;
+        }
+
+        .mds-logo-fixed {
+            position: fixed !important;
+            top: 8px !important;
+            right: 24px !important;
+            z-index: 99999 !important;
+            transform: none !important;
+            will-change: auto !important;
+            backface-visibility: hidden !important;
+        }
+
+        .mds-logo-fixed img {
+            position: static !important;
+            transform: none !important;
+        }
  
         .typing-indicator span:nth-child(2) {
             animation-delay: 0.2s;
@@ -93,6 +128,7 @@
         .typing-indicator span:nth-child(3) {
             animation-delay: 0.4s;
         }
+
  
         @keyframes typing {
             0%, 60%, 100% { transform: translateY(0); }
@@ -127,35 +163,44 @@
     </style>
 </head>
 <body class="gradient-bg min-h-screen font-sans">
-    <!-- Header -->
-    <header class="glass-card animate-slide-up">
-        <div class="container mx-auto px-6 py-5">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4">
-                    <a href="/" class="flex items-center space-x-3 group">
-                        <svg class="w-7 h-7 text-white group-hover:text-success transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                        </svg>
-                        <span class="text-white text-lg group-hover:text-success transition-colors">Back to Services</span>
-                    </a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-success rounded-lg flex items-center justify-center">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="text-2xl font-bold text-white">HR Assistant</h1>
-                        <p class="text-sm text-green-200">Always ready to help</p>
-                    </div>
+<!-- Header -->
+<header class="glass-card animate-slide-up">
+    <div class="container mx-auto px-6 py-5">
+        <div class="flex items-center">
+            <div class="flex items-center space-x-4">
+                <a href="/" class="flex items-center space-x-3 group">
+                    <svg class="w-7 h-7 text-white group-hover:text-success transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    <span class="text-white text-lg group-hover:text-success transition-colors">Back to Services</span>
+                </a>
+            </div>
+            <div class="flex-1 flex justify-center">
+                <div class="ml-72 pl-72">
+                    <h1 class="text-2xl font-bold text-white">HR Assistant</h1>
+                    <p class="text-sm text-green-200">Always ready to help</p>
                 </div>
             </div>
+            <div class="-mr-6">
+                <img src="/static/Image_08-01-1447_AH_at_12.26_PM-removebg-preview.png" alt="Company Logo" class="h-28 object-contain">
+            </div> 
         </div>
-    </header>
- 
+    </div>
+</header>
+
+<!-- Company Logo - Top Right (Enhanced Fixed Position) -->
+
+    
     <!-- Main Container with Chat and Reports -->
-    <main class="container mx-auto px-6 py-8 max-w-7xl">
+    <main class="container mx-auto px-6 py-8 max-w-7xl relative">
+        <!-- Powered By Section - Bottom Left -->
+        <div class="fixed left-4 bottom-8 z-10">
+            <div class="flex flex-col items-start space-y-1 opacity-90">
+                <span class="text-white/90 text-xs font-medium">powered by:</span>
+                <img src="/static/vectara_wordmark_light.png" alt="Company Logo" class="h-5 w-auto object-contain">
+            </div>
+        </div>
+
         <!-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-8"> -->
             <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 ">
  
@@ -242,6 +287,14 @@
                             </button>
                         </div>
                     </div>
+
+                    <!-- Powered By Section -->
+                    <!-- <div class="px-6 py-3 border-t border-white/5">
+                        <div class="flex items-center justify-center space-x-2 opacity-60">
+                            <span class="text-white/60 text-xs font-medium">powered by:</span>
+                            <img src="your-logo.png" alt="Company Logo" class="h-6 w-auto object-contain">
+                        </div>
+                    </div> -->
                 </div>
             </div>
  
@@ -355,7 +408,7 @@
                             </svg>
                             <span id = "smart_button_text">Generate Smart Report </span>
                             <svg id="report_spinner" class='w-5 h-5 animate-spin hidden' fill="#FFFFFF" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-                                    viewBox="0 0 3 2.707 32.707"
+                                    viewBox="0 0 32.707 32.707"
                                     xml:space="preserve">
                                 <g>
                                     <path d="M21.477,4.511c0,2.487-2.021,4.508-4.508,4.508c-2.49,0-4.509-2.021-4.509-4.508c0-2.49,2.02-4.511,4.509-4.511
@@ -741,5 +794,3 @@ exportButton.classList.add('opacity-50', 'cursor-not-allowed');
     </script>
 </body>
 </html>
-
-

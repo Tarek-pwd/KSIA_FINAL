@@ -944,33 +944,35 @@ def detect_signatures():
         print("pdf sign path >>", pdf_sig_path)
         res = check_context(text_arr, pdf_sig_path)
         sig_map = sig_out_to_map(res)
+
+        if res:
         
-        for key in sig_map.keys():
-            # Create display copy for LLM visualization
-            img_display = original_images[key-1].copy()
-            print("key >>", key)
-            text_box_indices = sig_map[key]
-            
-            for id, i in enumerate(text_box_indices):
-                top_left, bottom_right = text_arr[key][i]
+            for key in sig_map.keys():
+                # Create display copy for LLM visualization
+                img_display = original_images[key-1].copy()
+                print("key >>", key)
+                text_box_indices = sig_map[key]
                 
-                # Draw rectangle on display copy
-                cv2.rectangle(img_display, top_left, bottom_right, (0, 255, 0), 2)
+                for id, i in enumerate(text_box_indices):
+                    top_left, bottom_right = text_arr[key][i]
+                    
+                    # Draw rectangle on display copy
+                    cv2.rectangle(img_display, top_left, bottom_right, (0, 255, 0), 2)
+                    
+                    # Crop from CLEAN original
+                    clean_image = original_images[key-1]
+                    cropped_sig = clean_image[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
+                    
+                    # Run extraction on clean cropped image
+                    mask = run_extraction(cropped_sig)
+                    mask_path = f'static/mask_llm_{key}_{id}.png'
+                    cv2.imwrite(mask_path, mask * 255)
+                    extracted_signatures.append(f'/static/mask_llm_{key}_{id}.png')
                 
-                # Crop from CLEAN original
-                clean_image = original_images[key-1]
-                cropped_sig = clean_image[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
-                
-                # Run extraction on clean cropped image
-                mask = run_extraction(cropped_sig)
-                mask_path = f'static/mask_llm_{key}_{id}.png'
-                cv2.imwrite(mask_path, mask * 255)
-                extracted_signatures.append(f'/static/mask_llm_{key}_{id}.png')
-            
-            # Save the LLM detection visualization
-            llm_path = f'static/llm_detection_{key}.png'
-            cv2.imwrite(llm_path, img_display)
-            llm_detection_images.append(f'/static/llm_detection_{key}.png')
+                # Save the LLM detection visualization
+                llm_path = f'static/llm_detection_{key}.png'
+                cv2.imwrite(llm_path, img_display)
+                llm_detection_images.append(f'/static/llm_detection_{key}.png')
     
     return jsonify({
         'status': 'ok',

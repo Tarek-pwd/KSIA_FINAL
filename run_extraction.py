@@ -94,7 +94,7 @@ class UNet(nn.Module):
 
 
     
-device = 'gpu' if torch.cuda.is_available() else 'cpu'
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 model_pth = 'unet_FINAL_weights.pth'
 trained_model = UNet(in_channels=1, num_classes=1).to(device)
 trained_model.load_state_dict(torch.load(model_pth, map_location=torch.device(device)))

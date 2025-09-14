@@ -7,11 +7,11 @@ from decimal import Decimal
 import uuid  # For generating unique IDs
 
 # --- Database Connection Details ---
-DB_NAME = "HR_db_New"
+DB_NAME = "hr_database"
 DB_USER = "postgres"
-DB_PASSWORD = "postgres"
+DB_PASSWORD = "mdsP0stgres"
 DB_HOST = "localhost"
-DB_PORT = 5433
+DB_PORT = 5432
 
 conn = None  # Initialize conn to None for proper error handling
 cur = None   # Initialize cur to None
